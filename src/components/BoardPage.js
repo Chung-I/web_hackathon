@@ -42,15 +42,17 @@ class BoardPage extends Component {
   constructor() {
     super();
     this.state = {
-      users: []
+      articles: []
     };
   }
 
   componentDidMount() {
     // fetch `/api/users` to get users and then set state...
-    fetch(`/api/${this.props.params.board}/`).then(res => res.json())
+    let url = 'https://www.dcard.tw/_api/forums/' +this.props.params.board + '/posts?popular=false';
+
+    fetch(url).then(res => res.json())
     .then(json => {
-      this.setState({ users: json });
+      this.setState({ articles: json });
     });
   }
 
@@ -62,6 +64,16 @@ class BoardPage extends Component {
           </tr>
         </thead>
         <tbody>
+          {this.state.articles.map(article => {
+            const forumName = article.forumName.toLowerCase();
+            return (
+              <tr>
+                  <td>
+                    <a href={`#/${forumName}/${article.id}`}>{article.title}</a>
+                  </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     );

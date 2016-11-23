@@ -6,43 +6,33 @@ class ArticlePage extends Component {
   constructor() {
     super();
     this.state = {
-      user: {},
+      article: {},
     };
   }
 
   componentDidMount() {
-    // fetch `/api/users/${id}` to get user and then set state...
-    fetch(`/api/${this.props.params.board}/${this.props.params.id}`).then(res => res.json())
+    // fetch `/api/users/${id}` to get article and then set state...
+    let url = 'https://www.dcard.tw/_api/posts/' + this.props.params.id;
+    fetch(url).then(res => res.json())
     .then(json => {
-      this.setState({user: json});
+      this.setState({article: json});
     });
   }
 
   componentDidUpdate() {
-    // fetch `/api/users/${id}` to get user and then set state...
-    fetch(`/api/${this.props.params.board}/${this.props.params.id}`).then(res => res.json())
+    // fetch `/api/users/${id}` to get article and then set state...
+    let url = 'https://www.dcard.tw/_api/posts/' + this.props.params.id;
+    fetch(url).then(res => res.json())
     .then(json => {
-      this.setState({user: json});
+      this.setState({article: json});
     });
   }
 
   render() {
     return (
-      <table className="table table-responsive">
-        <thead>
-          <tr>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {Object.keys(this.state.user).map(key => (
-              <td>
-                <a href={`#/users/${this.props.params.id}`}>{this.state.user[key]}</a>
-              </td>))
-            }
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <p>{this.state.article.content}</p>
+      </div>
     );
   }
 }
