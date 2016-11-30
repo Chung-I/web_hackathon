@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
-
+import { Router, Route, Link, hashHistory } from 'react-router';
 
 class HomePage extends Component {
   render() {
     return (
-      <div>
-        Home
-        <br/>
-        <a href="#/users">users</a>
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12 text-center">
+            <h1>歡迎來到easyScheduling!</h1>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12 text-center">
+            <a className="btn btn-primary" href="#/create">建立事件</a>
+          </div>
+        </div>
       </div>
     );
   }

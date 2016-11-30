@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 
-class ArticlePage extends Component {
+class FormPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -46,4 +46,4 @@ class ArticlePage extends Component {
   }
 }
 
-export default ArticlePage;
+export default FormPage;

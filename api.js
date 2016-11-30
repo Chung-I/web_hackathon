@@ -3,10 +3,10 @@ import fetch from 'isomorphic-fetch';
 
 const router = new Router();
 const data = {
-  users: [
-  { avatar: 'http://xxx.com', name: 'John', age: 23 },
-  { avatar: 'http://xxx.com', name: 'Amy', age: 18 },
-  ]
+  startDate: '2016-12-01',
+  endDate: '2016-12-11',
+  startHour: '8',
+  endHour: '21',
 };
 
 function PTTParser(pttHTML) {
@@ -33,6 +33,15 @@ router.get('/:board/:id', (req, res) => {
     console.log(text);
     res.json(text);
   });
+});
+
+router.get('/form/leon', (req, res) => {
+  res.json(data);
+});
+
+router.post('/form/json', (req, res) => {
+  console.log(req.body);
+  res.json(req.body);
 });
 
 router.use((req, res) => {
