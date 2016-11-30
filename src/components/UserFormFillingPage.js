@@ -15,7 +15,6 @@ class UserFormFillingPage extends Component {
   }
 
   componentDidMount() {
-    // fetch `/api/users` to get users and then set state...
     fetch(`/api/form/{this.props.params.formName}`).then(res => res.json())
     .then(json => {
       console.log(json);
