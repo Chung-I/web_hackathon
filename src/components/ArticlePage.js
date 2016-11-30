@@ -12,7 +12,7 @@ class ArticlePage extends Component {
 
   componentDidMount() {
     // fetch `/api/users/${id}` to get article and then set state...
-    let url = 'https://www.dcard.tw/_api/posts/' + this.props.params.id;
+    const url = 'https://www.dcard.tw/_api/posts/' + this.props.params.id;
     fetch(url).then(res => res.json())
     .then(json => {
       this.setState({article: json});
@@ -33,14 +33,13 @@ class ArticlePage extends Component {
     return (
       <div>
         {content.map(line => {
-            if(line.match(/http.*jpg/)) {
-              console.log(line);
-              line = line.replace(/(http.*jpg)/, "<img className=\"img-fluid\" src=\"$1\" height=\"100px\" width=\"100px\" >");
-              line = {__html: line};
-              return (<p dangerouslySetInnerHTML={line} />);
-            }
-            else return (<p>{line}</p>);
-          })
+          if (line.match(/http.*jpg/)) {
+            line = line.replace(/(http.*jpg)/, "<img className=\"img-fluid\" src=\"$1\" height=\"100px\" width=\"100px\" >");
+            line = {__html: line};
+            return (<p dangerouslySetInnerHTML={line} />);
+          }
+          return (<p>{line}</p>);
+        })
         }
       </div>
     );
