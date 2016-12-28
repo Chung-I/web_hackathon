@@ -12,7 +12,7 @@ render(
   (<Router history={hashHistory}>
     <Route path="/" component={HomePage} />
     <Route path="/create" component={CreateEventPage} />
-    <Route path="/form/:formName" component={UserFormFillingPage} />
+    <Route path="/form/:eventName" component={UserFormFillingPage} />
   </Router>),
   document.getElementById('root'),
 );

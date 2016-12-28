@@ -8,21 +8,20 @@ class EventTimeBlock extends Component {
     endDate: PropTypes.string.isRequired,
     startHour: PropTypes.string.isRequired,
     endHour: PropTypes.string.isRequired,
+    clickable: PropTypes.boolean
 
   };
 
-  constructor(props) {
-    super();
-    const dateRange = this.getAllDays(props.startDate, props.endDate);
-    const hourRange = this.getAllHours(props.startHour, props.endHour);
-    let newBlockSelected = {};
+  componentWillReceiveProps = nextProps => {
+    const dateRange = this.getAllDays(nextProps.startDate, nextProps.endDate);
+    const hourRange = this.getAllHours(nextProps.startHour, nextProps.endHour);
+    const newBlockSelected = {};
     hourRange.forEach(hour => {
       dateRange.forEach(date => {
-        const timeBlock = this.yyyymmdd(date) + '-' + this.hh(hour);
-        newBlockSelected[timeBlock] = false;
+        const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
+        newBlockSelected[`${timeBlock}`] = false;
       });
     });
-
     this.state = {
       blockSelected: newBlockSelected
     };
@@ -30,8 +29,8 @@ class EventTimeBlock extends Component {
 
   getAllDays = (startDate, endDate) => {
     let s = new Date(startDate);
-    let e = new Date(endDate);
-    let a = [];
+    const e = new Date(endDate);
+    const a = [];
 
     while (s <= e) {
       a.push(s);
@@ -45,8 +44,8 @@ class EventTimeBlock extends Component {
 
   getAllHours = (startHour, endHour) => {
     let sh = +startHour;
-    let eh = +endHour;
-    let a = [];
+    const eh = +endHour;
+    const a = [];
     while (sh <= eh) {
       a.push(sh);
       sh += 1;
@@ -54,24 +53,22 @@ class EventTimeBlock extends Component {
     return a;
   };
 
-  yyyymmdd = (date) => {
-    var mm = date.getMonth() + 1; // getMonth() is zero-based
-    var dd = date.getDate();
+  yyyymmdd = date => {
+    const mm = date.getMonth() + 1; // getMonth() is zero-based
+    const dd = date.getDate();
 
     return [date.getFullYear(),
       (mm > 9 ? '' : '0') + mm,
       (dd > 9 ? '' : '0') + (dd - 1)
     ].join('-');
-  };
-
-  hh = (hour) => {
-    return (hour > 9 ? '' : '0') + hour;
   }
 
+  hh = hour => ((hour > 9 ? '' : '0') + hour)
+
   handleBlockChange = (event) => {
-    let newBlockSelected = this.state.blockSelected;
+    const newBlockSelected = this.state.blockSelected;
     newBlockSelected[event.target.id] = !newBlockSelected[event.target.id];
-    this.setState({ daysSelected: newBlockSelected });
+    this.setState({ blockSelected: newBlockSelected });
   }
 
   render() {
@@ -81,19 +78,20 @@ class EventTimeBlock extends Component {
     return (
       <div>{
         hourRange.map(hour => (
-          <div>{dateRange.map(date => {
-            let timeBlock = this.yyyymmdd(date) + '-' + this.hh(hour);
-            return (
-              <label className="btn btn-info btn-sm">
-                {this.props.clickable ? (<input
-                  id={timeBlock}
-                  type="checkbox"
-                  onChange={this.handleBlockChange}
-                />) : null}
-                {timeBlock}
-              </label>
-            );
-          })}</div>
+          <div>{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
+            .map(date => {
+              const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
+              return (
+                <label className="btn btn-info btn-sm">
+                  {this.props.clickable ? (<input
+                    id={timeBlock}
+                    type="checkbox"
+                    onChange={this.handleBlockChange}
+                  />) : null}
+                  {timeBlock}
+                </label>
+              );
+            })}</div>
           ))
       }</div>
     );
@@ -104,18 +102,5 @@ EventTimeBlock.defaultProps = {
   days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
     'Friday', 'Saturday', 'Sunday']
 };
-/*<div className="container">
-  {hourRange.map(hour => {
-    const h = this.hh(hour);
-    return (
-      <div className="row">
-        {dateRange.map(date => {
-          const dh = this.yyyymmdd(date) + h;
-          return (<button key={dh}>{dh}</button>);
-        })}
-      </div>
-    );
-  })}
-</div>*/
 
 export default EventTimeBlock;

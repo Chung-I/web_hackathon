@@ -5,51 +5,60 @@ import fetch from 'isomorphic-fetch';
 
 class CreateEventPage extends Component {
   static propTypes = {
-    days: PropTypes.arrayOf(PropTypes.string).isRequired,
+    days: PropTypes.arrayOf(PropTypes.integer).isRequired,
   };
 
-  constructor() {
+  constructor(props) {
     super();
-    let defaultDaysSelected = [];
-    for (let i = 0; i < 7; ++i) {
-      defaultDaysSelected[i]= false;
-    }
-    this.state =  {
+    const defaultDaysSelected = [];
+    props.days.forEach((day, idx) => {
+      defaultDaysSelected[idx] = false;
+    });
+    const today = new Date();
+    console.log(defaultDaysSelected);
+    console.log(this.yyyymmdd(today));
+    this.state = {
       eventName: '',
       daysSelected: defaultDaysSelected,
-      startDate: '2016-12-01',
-      endDate: '2016-12-11',
+      startDate: this.yyyymmdd(today),
+      endDate: this.yyyymmdd(today),
       startHour: '8',
       endHour: '21'
     };
   }
 
-  /*componentDidUpdate() {
-  }*/
-  handleEventNameChange = (event) => {
+  yyyymmdd = (date) => {
+    var mm = date.getMonth() + 1; // getMonth() is zero-based
+    var dd = date.getDate();
+
+    return [date.getFullYear(),
+            (mm>9 ? '' : '0') + mm,
+            (dd>9 ? '' : '0') + dd
+           ].join('-');
+  };
+
+
+  handleEventNameChange = event => {
     this.setState({ eventName: event.target.value });
   }
 
-  handleDayChange = (event) => {
-    let newDaysSelected = this.state.daysSelected;
-    for (let i = 0; i < newDaysSelected.length; ++i) {
-      if(('day' + i) === event.target.id) {
-        newDaysSelected[i] = !newDaysSelected[i];
-      }
-    }
+  handleDayChange = event => {
+    const newDaysSelected = this.state.daysSelected;
+    const day = parseInt(event.target.id, 10);
+    newDaysSelected[day] = !newDaysSelected[day];
     this.setState({ daysSelected: newDaysSelected });
   }
 
-  handleStartDateChange = (event) => {
-    console.log(event.target.value);
-    this.setState({ startDate:event.target.value });
+  handleStartDateChange = event => {
+    this.setState({ startDate: event.target.value });
   }
 
-  handleEndDateChange = (event) => {
-    this.setState({ endDate:event.target.value });
+  handleEndDateChange = event => {
+    this.setState({ endDate: event.target.value });
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = e => {
+    e.preventDefault();
     const data = {
       eventName: this.state.eventName,
       startDate: this.state.startDate,
@@ -58,12 +67,14 @@ class CreateEventPage extends Component {
       endHour: this.state.endHour,
       userData: []
     };
-    console.log(data);
-    fetch('/api/form/json/',
-    {
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    fetch(`/api/form/json`,
+      {
         method: 'POST',
-        body: JSON.stringify(data)
-    });
+        headers: myHeaders,
+        body: JSON.stringify(data),
+      });
   }
 
   render() {
@@ -104,7 +115,7 @@ class CreateEventPage extends Component {
               <div className="form-check" key={idx}>
                 <label className="form-check-label">
                   <input
-                    id={'day' + idx}
+                    id={idx}
                     checked={this.state.daysSelected[idx]}
                     onChange={this.handleDayChange}
                     type="checkbox"
@@ -128,6 +139,7 @@ class CreateEventPage extends Component {
           endDate={this.state.endDate}
           startHour={this.state.startHour}
           endHour={this.state.endHour}
+          daysSelected={this.state.daysSelected}
           clickable={false}
         />
       </div>
@@ -136,8 +148,8 @@ class CreateEventPage extends Component {
 }
 
 CreateEventPage.defaultProps = {
-  days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
-    'Friday', 'Saturday', 'Sunday']
+  days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+    'Friday', 'Saturday']
 };
 
 export default CreateEventPage;
