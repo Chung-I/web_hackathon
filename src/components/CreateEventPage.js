@@ -57,7 +57,7 @@ class CreateEventPage extends Component {
     this.setState({ endDate: event.target.value });
   }
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
     const data = {
       eventName: this.state.eventName,
@@ -69,12 +69,16 @@ class CreateEventPage extends Component {
     };
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-    fetch(`/api/form`,
-      {
-        method: 'POST',
-        headers: myHeaders,
-        body: JSON.stringify(data),
-      });
+    try {
+      const form = await fetch(`/api/form`,
+        {
+          method: 'POST',
+          headers: myHeaders,
+          body: JSON.stringify(data),
+        });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   render() {

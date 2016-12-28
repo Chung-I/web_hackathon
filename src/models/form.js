@@ -6,7 +6,9 @@ const formSchema = mongoose.Schema({
   endDate: String,
   startHour: Number,
   endHour: Number,
-  userData: [Object]
+  userData: [Object],
+  resultUrl: String,
+  fillFormUrl: String
 });
 
 export const Form = mongoose.model('Form', formSchema);
