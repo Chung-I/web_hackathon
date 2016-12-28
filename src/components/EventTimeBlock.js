@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
+import '../css/eventTimeBlock.css';
 
 class EventTimeBlock extends Component {
   static propTypes = {
@@ -75,24 +76,26 @@ class EventTimeBlock extends Component {
     const hourRange = this.getAllHours(this.props.startHour, this.props.endHour);
 
     return (
-      <div>{
-        hourRange.map(hour => (
-          <div>{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
-            .map(date => {
-              const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
-              return (
-                <label className="btn btn-info btn-sm">
-                  {this.props.clickable ? (<input
-                    id={timeBlock}
-                    type="checkbox"
-                    onChange={this.handleBlockChange}
-                  />) : null}
-                  {timeBlock}
-                </label>
-              );
-            })}</div>
-          ))
-      }</div>
+      <table>
+        <tbody>{
+          hourRange.map(hour => (
+            <tr>{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
+              .map(date => {
+                const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
+                return (
+                  <td className="slot weekday">
+                    {this.props.clickable ? (<input
+                      id={timeBlock}
+                      type="checkbox"
+                      onChange={this.handleBlockChange}
+                    />) : null}
+                    {timeBlock}
+                  </td>
+                );
+              })}</tr>
+            ))
+        }</tbody>
+      </table>
     );
   }
 }
