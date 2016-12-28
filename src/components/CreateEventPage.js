@@ -12,16 +12,18 @@ class CreateEventPage extends Component {
     super();
     const defaultDaysSelected = [];
     props.days.forEach((day, idx) => {
-      defaultDaysSelected[idx] = false;
+      defaultDaysSelected[idx] = true;
     });
     const today = new Date();
+    const sevenDaysLater = new Date();
+    sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
     console.log(defaultDaysSelected);
     console.log(this.yyyymmdd(today));
     this.state = {
       eventName: '',
       daysSelected: defaultDaysSelected,
       startDate: this.yyyymmdd(today),
-      endDate: this.yyyymmdd(today),
+      endDate: this.yyyymmdd(sevenDaysLater),
       startHour: 8,
       endHour: 21
     };
@@ -128,12 +130,6 @@ class CreateEventPage extends Component {
               </div>)
             )}
           </div>
-          <select className="custom-select">
-            <option >Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
           <div className="row">
             <button type="submit" className="btn btn-primary">Submit</button>
           </div>
