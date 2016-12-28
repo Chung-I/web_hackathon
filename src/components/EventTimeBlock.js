@@ -6,8 +6,8 @@ class EventTimeBlock extends Component {
   static propTypes = {
     startDate: PropTypes.string.isRequired,
     endDate: PropTypes.string.isRequired,
-    startHour: PropTypes.string.isRequired,
-    endHour: PropTypes.string.isRequired,
+    startHour: PropTypes.number.isRequired,
+    endHour: PropTypes.number.isRequired,
     clickable: PropTypes.boolean
 
   };

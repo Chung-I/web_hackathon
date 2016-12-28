@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import bodyParser from 'body-parser';
-import fs from 'fs';
+import { Form } from './src/models/form';
 
 const router = new Router();
 
@@ -21,13 +21,13 @@ router.get('/form/:eventName', (req, res) => {
   });
 });
 
-router.post('/form/json', (req, res) => {
-  const eventName = req.body.eventName;
-  console.log(eventName);
-  fs.writeFile(`${eventName}.json`, JSON.stringify(req.body), err => {
-    if (err) throw err;
-    res.json(req.body);
-  });
+router.post('/form', async (req, res) => {
+  try {
+    const form = await Form.create(req.body);
+    res.json(form);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 
