@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "server.js",
   "scripts": {
-    "start": "babel-node server.js",
+    "start": "NODE_ENV=development babel-node server.js",
     "test": "jest",
     "lint": "eslint src server.js api.js webpack.confing.js"
   },

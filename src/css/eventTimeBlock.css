@@ -1,0 +1,17 @@
+.time-block {
+    background-color: #3498db; /* Green */
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+}
+.weekday {
+    background: #EFEFEF;
+}
+.slot {
+    padding: 1px;
+    margin: 1px;
+}
