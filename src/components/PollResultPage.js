@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import 'babel-polyfill';
-
+import EventTimeBlock from './EventTimeBlock';
 // import fetch from 'isomorphic-fetch';
+import rd3 from 'rd3';
 
-// const peopleCount = [1, 2, 3, 4];
+// const peopleCount = (userdata.available = true) . length
+// const totalCount = usedata.length
 
-// const totalCount = [3, 2, 5, 6];
+const PollChart = rd3.PieChart;
 
 class PollResultPage extends Component {
   constructor(props) {
@@ -17,6 +19,7 @@ class PollResultPage extends Component {
     };
   }
 
+  // Need to fix to fit db schema
   componentDidMount() {
     fetch('/api/result')
       .then(res => res.json())
@@ -34,9 +37,10 @@ class PollResultPage extends Component {
   }
 
   render() {
+// Color change section
     const colorPcg = this.state.count / this.state.total;
 
-// Math.round usage: To turn float into restricted float
+    // Math.round usage: To turn float into restricted float
     const redPcg = Math.round(255 * (((1 - colorPcg) * 10) / 10));
     const greenPcg = Math.round(255 * ((colorPcg * 10) / 10));
 
@@ -49,6 +53,7 @@ class PollResultPage extends Component {
     if (greenResult === '0') {
       greenResult = '00';
     }
+
 // TODO: filter: brightness(1~100%)
 
 // To concatanate the color schema
@@ -66,6 +71,12 @@ class PollResultPage extends Component {
     };
 
 
+// Chart section
+    const chartData = [
+      { label: 'Come', value: colorPcg * 100 },
+      { label: 'Not Come', value: 100 - (colorPcg * 100) },
+    ];
+
     return (
       <div className="pollResult">
         <h1>The result - without data flow</h1>
@@ -78,6 +89,23 @@ class PollResultPage extends Component {
         <button style={btnstyle}>{this.state.count}</button>
         <button style={btnstyle}>{this.state.count}</button>
 
+        <hr />
+        <EventTimeBlock
+          startDate="2017-01-03-08"
+          endDate="2017-01-10-08"
+          startHour={8}
+          endHour={21}
+        />
+        <hr />
+        <PollChart
+          data={chartData}
+          width={450}
+          height={400}
+          radius={110}
+          innerRadius={20}
+          sectorBorderColor="white"
+          title="Result Chart"
+        />
       </div>
     );
   }
