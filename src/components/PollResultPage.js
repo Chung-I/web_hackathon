@@ -37,9 +37,10 @@ class PollResultPage extends Component {
   }
 
   render() {
+// Color change section
     const colorPcg = this.state.count / this.state.total;
 
-// Math.round usage: To turn float into restricted float
+    // Math.round usage: To turn float into restricted float
     const redPcg = Math.round(255 * (((1 - colorPcg) * 10) / 10));
     const greenPcg = Math.round(255 * ((colorPcg * 10) / 10));
 
@@ -52,6 +53,7 @@ class PollResultPage extends Component {
     if (greenResult === '0') {
       greenResult = '00';
     }
+
 // TODO: filter: brightness(1~100%)
 
 // To concatanate the color schema
@@ -68,6 +70,8 @@ class PollResultPage extends Component {
       backgroundColor: colorResult,
     };
 
+
+// Chart section
     const chartData = [
       { label: 'Come', value: colorPcg * 100 },
       { label: 'Not Come', value: 100 - (colorPcg * 100) },
