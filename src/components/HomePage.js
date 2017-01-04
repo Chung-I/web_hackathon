@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Router, Route, Link, hashHistory } from 'react-router';
 
 class HomePage extends Component {
   render() {
@@ -12,7 +11,7 @@ class HomePage extends Component {
         </div>
         <div className="row">
           <div className="col-md-12 text-center">
-            <a className="btn btn-primary" href="#/create">建立事件</a>
+            <a className="btn btn-primary" href="/create">建立事件</a>
           </div>
         </div>
       </div>

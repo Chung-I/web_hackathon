@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { Router, Route, hashHistory } from 'react-router';
+import { Router, Route, browserHistory } from 'react-router';
 import './bootstrap/css/bootstrap.min.css';
 import './bootstrap/css/bootstrap-theme.min.css';
 import HomePage from './components/HomePage';
@@ -10,7 +10,7 @@ import UserFormFillingPage from './components/UserFormFillingPage';
 import PollResultPage from './components/PollResultPage';
 
 render(
-  (<Router history={hashHistory}>
+  (<Router history={browserHistory}>
     <Route path="/" component={HomePage} />
     <Route path="/create" component={CreateEventPage} />
     <Route path="/form/:eventName" component={UserFormFillingPage} />
