@@ -37,8 +37,8 @@ class PollResultPage extends Component {
     const colorPcg = this.state.count / this.state.total;
 
 // Math.round usage: To turn float into restricted float
-    const redPcg = Math.round(255 * ((1 - colorPcg) * 10 / 10));
-    const greenPcg = Math.round(255 * (colorPcg * 10 / 10));
+    const redPcg = Math.round(255 * (((1 - colorPcg) * 10) / 10));
+    const greenPcg = Math.round(255 * ((colorPcg * 10) / 10));
 
     let redResult = redPcg.toString(16);
     let greenResult = greenPcg.toString(16);
@@ -52,7 +52,7 @@ class PollResultPage extends Component {
 // TODO: filter: brightness(1~100%)
 
 // To concatanate the color schema
-    const colorResult = '#' + redResult + greenResult + '00';
+    const colorResult = `#${redResult}${greenResult}00`;
 
 
 // testing color code
