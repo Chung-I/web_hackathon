@@ -5,7 +5,7 @@ import fetch from 'isomorphic-fetch';
 
 class CreateEventPage extends Component {
   static propTypes = {
-    days: PropTypes.arrayOf(PropTypes.integer).isRequired,
+    days: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
   constructor(props) {
@@ -25,20 +25,76 @@ class CreateEventPage extends Component {
       startDate: this.yyyymmdd(today),
       endDate: this.yyyymmdd(sevenDaysLater),
       startHour: 8,
-      endHour: 21
+      endHour: 21,
+      blockSelected: {}
     };
   }
 
-  yyyymmdd = (date) => {
-    var mm = date.getMonth() + 1; // getMonth() is zero-based
-    var dd = date.getDate();
 
-    return [date.getFullYear(),
-            (mm>9 ? '' : '0') + mm,
-            (dd>9 ? '' : '0') + dd
-           ].join('-');
+  getAllDays = (startDate, endDate) => {
+    let s = new Date(startDate);
+    const e = new Date(endDate);
+    const a = [];
+
+    while (s <= e) {
+      a.push(s);
+      s = new Date(s.setDate(
+        s.getDate() + 1
+      ));
+    }
+
+    return a;
   };
 
+  getAllHours = (startHour, endHour) => {
+    let sh = +startHour;
+    const eh = +endHour;
+    const a = [];
+    while (sh <= eh) {
+      a.push(sh);
+      sh += 1;
+    }
+    return a;
+  };
+
+  yyyymmdd = date => {
+    const mm = date.getMonth() + 1; // getMonth() is zero-based
+    const dd = date.getDate();
+
+    return [date.getFullYear(),
+      (mm > 9 ? '' : '0') + mm,
+      (dd > 9 ? '' : '0') + dd
+    ].join('-');
+  };
+
+  yyyymmdd = date => {
+    const mm = date.getMonth() + 1; // getMonth() is zero-based
+    const dd = date.getDate();
+
+    return [date.getFullYear(),
+      (mm > 9 ? '' : '0') + mm,
+      (dd > 9 ? '' : '0') + (dd - 1)
+    ].join('-');
+  };
+
+  hh = hour => ((hour > 9 ? '' : '0') + hour);
+
+  updateBlockSelected = () => {
+    const oldState = this.state;
+    const dateRange = this.getAllDays(oldState.startDate, oldState.endDate);
+    const hourRange = this.getAllHours(oldState.startHour, oldState.endHour);
+    const newBlockSelected = {};
+    hourRange.forEach(hour => {
+      dateRange.forEach(date => {
+        const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
+        const oldBlockSelected = oldState.blockSelected[`${timeBlock}`];
+        newBlockSelected[`${timeBlock}`] = oldBlockSelected || false;
+      });
+    });
+    this.setState({
+      blockSelected: newBlockSelected
+    });
+  }
 
   handleEventNameChange = event => {
     this.setState({ eventName: event.target.value });
@@ -49,14 +105,23 @@ class CreateEventPage extends Component {
     const day = parseInt(event.target.id, 10);
     newDaysSelected[day] = !newDaysSelected[day];
     this.setState({ daysSelected: newDaysSelected });
+    this.updateBlockSelected();
   }
 
   handleStartDateChange = event => {
     this.setState({ startDate: event.target.value });
+    this.updateBlockSelected();
   }
 
   handleEndDateChange = event => {
     this.setState({ endDate: event.target.value });
+    this.updateBlockSelected();
+  }
+
+  handleBlockChange = event => {
+    const newBlockSelected = this.state.blockSelected;
+    newBlockSelected[event.target.id] = !newBlockSelected[event.target.id];
+    this.setState({ blockSelected: newBlockSelected });
   }
 
   handleSubmit = async e => {
@@ -141,6 +206,8 @@ class CreateEventPage extends Component {
           endHour={this.state.endHour}
           daysSelected={this.state.daysSelected}
           clickable={false}
+          blockSelected={this.state.blockSelected}
+          handleBlockChange={this.handleBlockChange}
         />
       </div>
     );
