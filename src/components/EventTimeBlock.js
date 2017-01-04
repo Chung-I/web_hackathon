@@ -59,7 +59,7 @@ class EventTimeBlock extends Component {
 
     return [date.getFullYear(),
       (mm > 9 ? '' : '0') + mm,
-      (dd > 9 ? '' : '0') + (dd - 1)
+      (dd > 9 ? '' : '0') + dd,
     ].join('-');
   };
 
@@ -78,10 +78,10 @@ class EventTimeBlock extends Component {
                 const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
                 return (
                   <td
-                  onMouseDown={this.handleMouseDown}
-                  onMouseOver={this.handleMouseOver}
-                  onMouseUp={this.handleMouseUp}
-                  className="slot weekday space-at-right">
+                    onMouseDown={this.handleMouseDown}
+                    onMouseOver={this.handleMouseOver}
+                    onMouseUp={this.handleMouseUp}
+                    className="slot weekday space-at-right">
                     <input
                       id={timeBlock}
                       type="checkbox"
