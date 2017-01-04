@@ -8,8 +8,7 @@ class EventTimeBlock extends Component {
     endDate: PropTypes.string.isRequired,
     startHour: PropTypes.number.isRequired,
     endHour: PropTypes.number.isRequired,
-    clickable: PropTypes.boolean
-
+    clickable: PropTypes.bool
   };
 
   componentWillReceiveProps = nextProps => {
