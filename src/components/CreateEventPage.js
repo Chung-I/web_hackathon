@@ -73,7 +73,7 @@ class CreateEventPage extends Component {
 
     return [date.getFullYear(),
       (mm > 9 ? '' : '0') + mm,
-      (dd > 9 ? '' : '0') + (dd - 1)
+      (dd > 9 ? '' : '0') + dd,
     ].join('-');
   };
 
