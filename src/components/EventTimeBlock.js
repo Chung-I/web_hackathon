@@ -14,21 +14,6 @@ class EventTimeBlock extends Component {
     blockSelected: PropTypes.object
   };
 
-  /*componentDidUpdate = (prevProps, prevState) => {
-    const dateRange = this.getAllDays(prevState.startDate, prevState.endDate);
-    const hourRange = this.getAllHours(prevState.startHour, prevState.endHour);
-    const newBlockSelected = {};
-    hourRange.forEach(hour => {
-      dateRange.forEach(date => {
-        const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
-        newBlockSelected[`${timeBlock}`] = false;
-      });
-    });
-    this.state = {
-      blockSelected: newBlockSelected
-    };
-  }*/
-
 
   handleMouseDown = e => {
     console.log(`mouse down: ${e.target}`);
