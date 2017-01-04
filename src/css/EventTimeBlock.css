@@ -1,5 +1,5 @@
 .time-block {
-    background-color: #3498db; /* Blue */
+    background-color: #3498db;
     border: none;
     color: white;
     padding: 5px 10px;
@@ -8,9 +8,11 @@
     display: inline-block;
     font-size: 12px;
 }
+
 .weekday {
     background: #EFEFEF;
 }
+
 .slot {
     padding: 1px;
     margin: 1px;
@@ -25,6 +27,7 @@ td.space-at-right {
 
 .time-table {
   border-collapse: separate;
+  empty-cells: hide;
 }
 
 tr.spaceUnder {

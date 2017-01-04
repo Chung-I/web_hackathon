@@ -26,7 +26,7 @@ class CreateEventPage extends Component {
       endDate: this.yyyymmdd(sevenDaysLater),
       startHour: 8,
       endHour: 21,
-      blockSelected: {}
+      eventTimeSelected: []
     };
   }
 
@@ -87,12 +87,12 @@ class CreateEventPage extends Component {
     hourRange.forEach(hour => {
       dateRange.forEach(date => {
         const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
-        const oldBlockSelected = oldState.blockSelected[`${timeBlock}`];
+        const oldBlockSelected = oldState.eventTimeSelected[`${timeBlock}`];
         newBlockSelected[`${timeBlock}`] = oldBlockSelected || false;
       });
     });
     this.setState({
-      blockSelected: newBlockSelected
+      eventTimeSelected: newBlockSelected
     });
   }
 
@@ -119,21 +119,22 @@ class CreateEventPage extends Component {
   }
 
   handleBlockChange = event => {
-    const newBlockSelected = this.state.blockSelected;
-    newBlockSelected[event.target.id] = !newBlockSelected[event.target.id];
-    this.setState({ blockSelected: newBlockSelected });
+    const newEventTimeSelected = this.state.eventTimeSelected;
+    newEventTimeSelected[event.target.id] = !newEventTimeSelected[event.target.id];
+    this.setState({ eventTimeSelected: newEventTimeSelected });
   }
 
   handleSubmit = async e => {
+    const eventTimeSelected = this.state.eventTimeSelected;
     e.preventDefault();
+    const eventTime = Object.keys(eventTimeSelected).filter(
+      key => eventTimeSelected[key]);
     const data = {
       eventName: this.state.eventName,
-      startDate: this.state.startDate,
-      endDate: this.state.endDate,
-      startHour: this.state.startHour,
-      endHour: this.state.endHour,
+      eventTime,
       userData: []
     };
+    console.log(eventTime);
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     try {
@@ -206,7 +207,7 @@ class CreateEventPage extends Component {
           endHour={this.state.endHour}
           daysSelected={this.state.daysSelected}
           clickable={false}
-          blockSelected={this.state.blockSelected}
+          eventTimeSelected={this.state.eventTimeSelected}
           handleBlockChange={this.handleBlockChange}
         />
       </div>

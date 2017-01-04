@@ -11,7 +11,8 @@ class EventTimeBlock extends Component {
     endHour: PropTypes.number.isRequired,
     clickable: PropTypes.bool,
     handleBlockChange: PropTypes.func,
-    blockSelected: PropTypes.object
+    blockSelected: PropTypes.object,
+    daysSelected: PropTypes.array
   };
 
 
@@ -59,7 +60,7 @@ class EventTimeBlock extends Component {
 
     return [date.getFullYear(),
       (mm > 9 ? '' : '0') + mm,
-      (dd > 9 ? '' : '0') + (dd - 1)
+      (dd > 9 ? '' : '0') + dd,
     ].join('-');
   };
 
@@ -68,27 +69,38 @@ class EventTimeBlock extends Component {
   render() {
     const dateRange = this.getAllDays(this.props.startDate, this.props.endDate);
     const hourRange = this.getAllHours(this.props.startHour, this.props.endHour);
+    
+    const dateTimeRange = { 2017: { 1: { 5: { 8: true, 9: true, 11: true }, 7: { 11: true, 12: true } } } };
 
     return (
-      <table className="time-able">
+      <table className="time-table">
         <tbody>{
           hourRange.map(hour => (
             <tr className="spaceUnder">{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
               .map(date => {
                 const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
-                return (
-                  <td
-                  onMouseDown={this.handleMouseDown}
-                  onMouseOver={this.handleMouseOver}
-                  onMouseUp={this.handleMouseUp}
-                  className="slot weekday space-at-right">
+                const dateArr = [date.getFullYear(), date.getMonth() + 1, date.getDate()];
+                let hourable;
+                try {
+                  hourable = dateTimeRange[dateArr[0]][dateArr[1]][dateArr[2]][hour];
+                } catch (e) {
+                  console.log(e);
+                }
+                return (hourable ?
+                  (<td
+                    onMouseDown={this.handleMouseDown}
+                    onMouseOver={this.handleMouseOver}
+                    onMouseUp={this.handleMouseUp}
+                    className="slot space-at-right"
+                  >
                     <input
                       id={timeBlock}
                       type="checkbox"
                       onChange={e => this.props.handleBlockChange(e)}
-                    />
-                    {timeBlock}
-                  </td>
+                    />{timeBlock}</td>) : (
+                      <td
+                        className="slot space-at-right"
+                      >&nbsp;</td>)
                 );
               })}</tr>
             ))
