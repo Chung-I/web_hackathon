@@ -1,3 +1,4 @@
+// entry page for event creator
 import React, { Component } from 'react';
 
 class HomePage extends Component {

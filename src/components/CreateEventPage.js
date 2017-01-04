@@ -5,14 +5,14 @@ import fetch from 'isomorphic-fetch';
 
 class CreateEventPage extends Component {
   static propTypes = {
-    days: PropTypes.arrayOf(PropTypes.integer).isRequired,
+    days: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
   constructor(props) {
     super();
     const defaultDaysSelected = [];
     props.days.forEach((day, idx) => {
-      defaultDaysSelected[idx] = false;
+      defaultDaysSelected[idx] = true;
     });
     const today = new Date();
     console.log(defaultDaysSelected);
