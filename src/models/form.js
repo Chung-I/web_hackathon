@@ -7,6 +7,7 @@ const formSchema = mongoose.Schema({
   startHour: Number,
   endHour: Number,
   userData: [Object],
+  eventTime: Object,
   eventUrl: { type: String, unique: true },
   adminUrl: { type: String, unique: true }
 });

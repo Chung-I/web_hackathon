@@ -132,8 +132,10 @@ class CreateEventPage extends Component {
       endDate: this.state.endDate,
       startHour: this.state.startHour,
       endHour: this.state.endHour,
+      eventTime: this.state.blockSelected,
       userData: []
     };
+    console.log(data);
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     try {
