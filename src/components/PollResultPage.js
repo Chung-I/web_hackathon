@@ -7,43 +7,7 @@ import rd3 from 'rd3';
 // const peopleCount = (userdata.available = true) . length
 // const totalCount = usedata.length
 
-const BarChart = rd3.BarChart;
-
-const barData = [
-  {
-    name: 'Series A',
-    values: [
-      { x: 1, y: 91 },
-      { x: 2, y: 80 },
-      { x: 3, y: 75 },
-      { x: 4, y: 69 },
-      { x: 5, y: 61 },
-      { x: 6, y: 55 },
-      { x: 7, y: 50 },
-      { x: 8, y: 44 },
-      { x: 9, y: 42 },
-      { x: 10, y: 39 },
-      { x: 11, y: 35 },
-      { x: 12, y: 24 },
-    ]
-  },
-];
-
-class PollTestChart extends Component {
-  render() {
-    return (
-      <BarChart
-        data={barData}
-        width={500}
-        height={200}
-        fill={'#3182bd'}
-        title="Bar Chart"
-        yAxisLabel="Label"
-        xAxisLabel="Value"
-      />
-    );
-  }
-}
+const PollChart = rd3.PieChart;
 
 class PollResultPage extends Component {
   constructor(props) {
@@ -104,6 +68,10 @@ class PollResultPage extends Component {
       backgroundColor: colorResult,
     };
 
+    const chartData = [
+      { label: 'Come', value: colorPcg * 100 },
+      { label: 'Not Come', value: 100 - (colorPcg * 100) },
+    ];
 
     return (
       <div className="pollResult">
@@ -125,7 +93,15 @@ class PollResultPage extends Component {
           endHour={21}
         />
         <hr />
-        <PollTestChart />
+        <PollChart
+          data={chartData}
+          width={450}
+          height={400}
+          radius={110}
+          innerRadius={20}
+          sectorBorderColor="white"
+          title="Result Chart"
+        />
       </div>
     );
   }
