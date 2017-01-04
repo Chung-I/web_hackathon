@@ -11,7 +11,7 @@ class EventTimeBlock extends Component {
     endHour: PropTypes.number.isRequired,
     clickable: PropTypes.bool,
     handleBlockChange: PropTypes.func,
-    blockSelected: PropTypes.Object
+    blockSelected: PropTypes.object
   };
 
   /*componentDidUpdate = (prevProps, prevState) => {
