@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import bodyParser from 'body-parser';
-import fs from 'fs';
+import { Form } from './src/models/form';
 
 const router = new Router();
 
@@ -21,13 +21,29 @@ router.get('/form/:eventName', (req, res) => {
   });
 });
 
-router.post('/form/json', (req, res) => {
-  const eventName = req.body.eventName;
-  console.log(eventName);
-  fs.writeFile(`${eventName}.json`, JSON.stringify(req.body), err => {
-    if (err) throw err;
-    res.json(req.body);
-  });
+router.post('/form', async (req, res) => {
+  function randomString(length, chars) {
+    let result = '';
+    for (let i = length; i > 0; --i) {
+      result += chars[Math.round(Math.random() * (chars.length - 1))];
+    }
+    return result;
+  }
+
+  const resultUrl = randomString(6, '045cdTWXef132ijklUVmn67opLMghNqrRSYuZEFstvxO89yzABCDabGHwIJKPQ');
+  const fillFormUrl = randomString(6, '4st5cdTef1032ikVCWXFjvUn67opLMghNDaqrRPQmSYuZExO89yzABbGHwIJKl');
+  console.log(resultUrl);
+  console.log(fillFormUrl);
+  const body = req.body;
+  body.resultUrl = resultUrl;
+  body.fillFormUrl = fillFormUrl;
+  console.log(body);
+  try {
+    const form = await Form.create(body);
+    res.json(form);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 
