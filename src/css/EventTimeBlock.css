@@ -15,3 +15,19 @@
     padding: 1px;
     margin: 1px;
 }
+
+td.space-at-right {
+    border-right: 5px solid transparent;
+    -webkit-background-clip: padding;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+}
+
+.time-table {
+  border-collapse: separate;
+}
+
+tr.spaceUnder {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}

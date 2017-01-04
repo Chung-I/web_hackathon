@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
-import '../css/eventTimeBlock.css';
+import '../css/EventTimeBlock.css';
 
 class EventTimeBlock extends Component {
   static propTypes = {
@@ -10,11 +10,13 @@ class EventTimeBlock extends Component {
     startHour: PropTypes.number.isRequired,
     endHour: PropTypes.number.isRequired,
     clickable: PropTypes.bool
+    handleBlockChange: PropTypes.func,
+    blockSelected: PropTypes.Object
   };
 
-  componentWillReceiveProps = nextProps => {
-    const dateRange = this.getAllDays(nextProps.startDate, nextProps.endDate);
-    const hourRange = this.getAllHours(nextProps.startHour, nextProps.endHour);
+  /*componentDidUpdate = (prevProps, prevState) => {
+    const dateRange = this.getAllDays(prevState.startDate, prevState.endDate);
+    const hourRange = this.getAllHours(prevState.startHour, prevState.endHour);
     const newBlockSelected = {};
     hourRange.forEach(hour => {
       dateRange.forEach(date => {
@@ -25,6 +27,19 @@ class EventTimeBlock extends Component {
     this.state = {
       blockSelected: newBlockSelected
     };
+  }*/
+
+
+  handleMouseDown = e => {
+    console.log(`mouse down: ${e.target}`);
+  }
+
+  handleMouseUp = e => {
+    console.log(`mouse up: ${e.target}`);
+  }
+
+  handleMouseOver = e => {
+    console.log(`mouse over: ${e.target}`);
   }
 
   getAllDays = (startDate, endDate) => {
@@ -61,34 +76,32 @@ class EventTimeBlock extends Component {
       (mm > 9 ? '' : '0') + mm,
       (dd > 9 ? '' : '0') + (dd - 1)
     ].join('-');
-  }
+  };
 
-  hh = hour => ((hour > 9 ? '' : '0') + hour)
-
-  handleBlockChange = (event) => {
-    const newBlockSelected = this.state.blockSelected;
-    newBlockSelected[event.target.id] = !newBlockSelected[event.target.id];
-    this.setState({ blockSelected: newBlockSelected });
-  }
+  hh = hour => ((hour > 9 ? '' : '0') + hour);
 
   render() {
     const dateRange = this.getAllDays(this.props.startDate, this.props.endDate);
     const hourRange = this.getAllHours(this.props.startHour, this.props.endHour);
 
     return (
-      <table>
+      <table className="time-able">
         <tbody>{
           hourRange.map(hour => (
-            <tr>{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
+            <tr className="spaceUnder">{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
               .map(date => {
                 const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
                 return (
-                  <td className="slot weekday">
-                    {this.props.clickable ? (<input
+                  <td
+                  onMouseDown={this.handleMouseDown}
+                  onMouseOver={this.handleMouseOver}
+                  onMouseUp={this.handleMouseUp}
+                  className="slot weekday space-at-right">
+                    <input
                       id={timeBlock}
                       type="checkbox"
-                      onChange={this.handleBlockChange}
-                    />) : null}
+                      onChange={e => this.props.handleBlockChange(e)}
+                    />
                     {timeBlock}
                   </td>
                 );
