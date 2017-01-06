@@ -110,12 +110,12 @@ class CreateEventPage extends Component {
 
   handleStartDateChange = event => {
     this.setState({ startDate: event.target.value });
-    this.handleBlockChange();
+    // this.handleBlockChange();
   }
 
   handleEndDateChange = event => {
     this.setState({ endDate: event.target.value });
-    this.handleBlockChange();
+    // this.handleBlockChange();
   }
 
   handleBlockChange = event => {
