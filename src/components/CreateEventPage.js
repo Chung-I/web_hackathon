@@ -79,22 +79,22 @@ class CreateEventPage extends Component {
 
   hh = hour => ((hour > 9 ? '' : '0') + hour);
 
-  updateBlockSelected = () => {
-    const oldState = this.state;
-    const dateRange = this.getAllDays(oldState.startDate, oldState.endDate);
-    const hourRange = this.getAllHours(oldState.startHour, oldState.endHour);
-    const newBlockSelected = {};
-    hourRange.forEach(hour => {
-      dateRange.forEach(date => {
-        const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
-        const oldBlockSelected = oldState.blockSelected[`${timeBlock}`];
-        newBlockSelected[`${timeBlock}`] = oldBlockSelected || false;
-      });
-    });
-    this.setState({
-      blockSelected: newBlockSelected
-    });
-  }
+  // updateBlockSelected = () => {
+  //   const oldState = this.state;
+  //   const dateRange = this.getAllDays(oldState.startDate, oldState.endDate);
+  //   const hourRange = this.getAllHours(oldState.startHour, oldState.endHour);
+  //   const newBlockSelected = {};
+  //   hourRange.forEach(hour => {
+  //     dateRange.forEach(date => {
+  //       const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
+  //       const oldBlockSelected = oldState.blockSelected[`${timeBlock}`];
+  //       newBlockSelected[`${timeBlock}`] = oldBlockSelected || false;
+  //     });
+  //   });
+  //   this.setState({
+  //     blockSelected: newBlockSelected
+  //   });
+  // }
 
   handleEventNameChange = event => {
     this.setState({ eventName: event.target.value });
@@ -105,17 +105,17 @@ class CreateEventPage extends Component {
     const day = parseInt(event.target.id, 10);
     newDaysSelected[day] = !newDaysSelected[day];
     this.setState({ daysSelected: newDaysSelected });
-    this.updateBlockSelected();
+    this.handleBlockChange();
   }
 
   handleStartDateChange = event => {
     this.setState({ startDate: event.target.value });
-    this.updateBlockSelected();
+    this.handleBlockChange();
   }
 
   handleEndDateChange = event => {
     this.setState({ endDate: event.target.value });
-    this.updateBlockSelected();
+    this.handleBlockChange();
   }
 
   handleBlockChange = event => {
