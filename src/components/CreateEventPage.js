@@ -122,6 +122,7 @@ class CreateEventPage extends Component {
     const newBlockSelected = this.state.blockSelected;
     newBlockSelected[event.target.id] = !newBlockSelected[event.target.id];
     this.setState({ blockSelected: newBlockSelected });
+    console.log();
   }
 
   handleSubmit = async e => {
@@ -150,8 +151,12 @@ class CreateEventPage extends Component {
     }
     const eventUrl = form.eventUrl;
     const adminUrl = form.adminUrl;
+
     console.log(eventUrl);
     console.log(adminUrl);
+
+// TODO: Need to redirect to the jump-page
+    location.reload();
   }
 
   render() {
