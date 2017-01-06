@@ -12,6 +12,7 @@
     "react/jsx-filename-extension": "off",
     "react/prefer-stateless-function": "off",
     "import/first": "off",
-    "react/forbid-prop-types":"off"
+    "react/forbid-prop-types":"off",
+    "no-console": "off"
   }
 }
