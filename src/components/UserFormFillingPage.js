@@ -16,29 +16,18 @@ class UserFormFillingPage extends Component {
   }
 
   componentDidMount() {
-    fetch(`/api/form/${this.props.params.eventName}`).then(res => res.json())
+    console.log(this.props.params.eventUrl);
+    fetch(`/api/form/${this.props.params.eventUrl}`)
+    .then(res => res.json())
     .then(json => {
-      const formData = JSON.parse(json);
+      console.log(json);
       this.setState({
-        eventName: this.props.params.eventName,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        startHour: formData.startHour,
-        endHour: formData.endHour,
-      });
-    });
-  }
-
-  ComponentDidUpdate() {
-    fetch(`/api/form/${this.props.params.eventName}`).then(res => res.json())
-    .then(json => {
-      const formData = JSON.parse(json);
-      this.setState({
-        eventName: formData.eventName,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        startHour: formData.startHour,
-        endHour: formData.endHour
+        eventName: json.eventUrl,
+        startDate: json.startDate,
+        endDate: json.endDate,
+        startHour: json.startHour,
+        endHour: json.endHour,
+        blockSelected: json.eventTime,
       });
     });
   }
@@ -77,11 +66,11 @@ class UserFormFillingPage extends Component {
             />
           </div>
           <EventTimeBlock
-            ref={eventTBlk => { this.eventTBlk = eventTBlk; }}
             startDate={this.state.startDate}
             endDate={this.state.endDate}
             startHour={this.state.startHour}
             endHour={this.state.endHour}
+            blockSelected={this.state.blockSelected}
             clickable
           />
           <button type="submit" className="btn btn-primary">Submit</button>

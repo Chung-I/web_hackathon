@@ -137,21 +137,22 @@ class CreateEventPage extends Component {
     };
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-    let form;
+    let res;
+    let json;
     try {
-      form = await fetch(`/api/form`,
+      res = await fetch(`/api/form`,
         {
           method: 'POST',
           headers: myHeaders,
           body: JSON.stringify(data),
         });
+      json = await res.json();
     } catch (err) {
       console.log(err);
     }
-    const eventUrl = form.eventUrl;
-    const adminUrl = form.adminUrl;
-    console.log(eventUrl);
-    console.log(adminUrl);
+    const eventUrl = json.eventUrl;
+    const adminUrl = json.adminUrl;
+    window.location.href = `form/${eventUrl}`;
   }
 
   render() {

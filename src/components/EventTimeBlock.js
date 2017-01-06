@@ -81,7 +81,8 @@ class EventTimeBlock extends Component {
                     onMouseDown={this.handleMouseDown}
                     onMouseOver={this.handleMouseOver}
                     onMouseUp={this.handleMouseUp}
-                    className="slot weekday space-at-right">
+                    className="slot weekday space-at-right"
+                  >
                     <input
                       id={timeBlock}
                       type="checkbox"
