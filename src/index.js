@@ -14,9 +14,8 @@ render(
   (<Router history={browserHistory}>
     <Route path="/" component={HomePage} />
     <Route path="/create" component={CreateEventPage} />
-    <Route path="/form/:eventUrl" component={UserFormFillingPage}>
-      <Route path="/links/:adminUrl" component={JumpPage} />
-    </Route>
+    <Route path="/form/:eventUrl" component={UserFormFillingPage} />
+    <Route path="/form/:eventUrl/links/:adminUrl" component={JumpPage} />
     <Route path="/result" component={PollResultPage} />
   </Router>),
   document.getElementById('root'),

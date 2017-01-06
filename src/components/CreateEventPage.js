@@ -17,8 +17,6 @@ class CreateEventPage extends Component {
     const today = new Date();
     const sevenDaysLater = new Date();
     sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
-    console.log(defaultDaysSelected);
-    console.log(this.yyyymmdd(today));
     this.state = {
       eventName: '',
       daysSelected: defaultDaysSelected,
@@ -125,7 +123,10 @@ class CreateEventPage extends Component {
   }
 
   handleSubmit = async e => {
+    const blockSelected = this.state.blockSelected;
     e.preventDefault();
+    const eventTime = Object.keys(blockSelected).filter(
+      key => blockSelected[key]);
     const data = {
       eventName: this.state.eventName,
       startDate: this.state.startDate,
@@ -152,7 +153,7 @@ class CreateEventPage extends Component {
     }
     const eventUrl = json.eventUrl;
     const adminUrl = json.adminUrl;
-    window.location.href = `form/${eventUrl}`;
+    window.location.href = `form/${eventUrl}/links/${adminUrl}`;
   }
 
   render() {

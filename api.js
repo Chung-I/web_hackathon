@@ -38,6 +38,7 @@ router.post('/form', async (req, res) => {
   const eventUrl = randomString(6, '045cdTWXef132ijklUVmn67opLMghNqrRSYuZEFstvxO89yzABCDabGHwIJKPQ');
   const adminUrl = randomString(6, '4st5cdTef1032ikVCWXFjvUn67opLMghNDaqrRPQmSYuZExO89yzABbGHwIJKl');
   const body = req.body;
+  console.log(body);
   body.eventUrl = eventUrl;
   body.adminUrl = adminUrl;
   console.log(body);

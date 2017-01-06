@@ -6,28 +6,27 @@ class UserFormFillingPage extends Component {
   constructor() {
     super();
     this.state = {
-      eventName: '',
+      eventUrl: '',
       startDate: '',
       endDate: '',
       startHour: '',
       endHour: '',
+      daysSelected: [1, 2, 3, 4, 5, 6, 7],
       userName: ''
     };
   }
 
   componentDidMount() {
-    console.log(this.props.params.eventUrl);
     fetch(`/api/form/${this.props.params.eventUrl}`)
     .then(res => res.json())
     .then(json => {
-      console.log(json);
       this.setState({
-        eventName: json.eventUrl,
+        eventUrl: json.eventUrl,
         startDate: json.startDate,
         endDate: json.endDate,
         startHour: json.startHour,
         endHour: json.endHour,
-        blockSelected: json.eventTime,
+        eventTime: json.eventTime,
       });
     });
   }
@@ -39,7 +38,7 @@ class UserFormFillingPage extends Component {
   handleSubmit = e => {
     const data = {
       userName: this.state.userName,
-      userData: this.eventTBlk.state.blockSelected
+      userData: this.eventTBlk.state.eventTime
     };
     e.preventDefault();
     const myHeaders = new Headers();
@@ -70,7 +69,8 @@ class UserFormFillingPage extends Component {
             endDate={this.state.endDate}
             startHour={this.state.startHour}
             endHour={this.state.endHour}
-            blockSelected={this.state.blockSelected}
+            eventTime={this.state.eventTime}
+            daysSelected={this.state.daysSelected}
             clickable
           />
           <button type="submit" className="btn btn-primary">Submit</button>

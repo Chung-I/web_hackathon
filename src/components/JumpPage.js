@@ -11,14 +11,10 @@ class JumpPage extends Component {
 
   componentDidMount = async () => {
     // fetch `/api/users/${id}` to get article and then set state...
-    const eventUrl = this.props.params.eventUrl;
-    try {
-      const res = await fetch(`/api/form/${eventUrl}`);
-      const json = await res.json();
-      console.log(json);
-    } catch (err) {
-      console.log(err);
-    }
+    this.setState({
+      eventUrl: this.props.params.eventUrl,
+      adminUrl: this.props.params.adminUrl
+    });
   }
 
   render() {
@@ -30,8 +26,9 @@ class JumpPage extends Component {
           </div>
         </div>
         <div className="row">
+          <h2>Send this link to your invitees...</h2>
           <div className="col-md-12 text-center">
-            <a href></a>
+            <a href={`/form/${this.state.eventUrl}`}>link</a>
           </div>
         </div>
       </div>
