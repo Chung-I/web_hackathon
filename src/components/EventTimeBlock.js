@@ -29,13 +29,15 @@ class EventTimeBlock extends Component {
   }
 
   getAllDays = (startDate, endDate) => {
-    let s = new Date(startDate);
+    const s = new Date(startDate);
+  // Temp variable for updating a[]
+    let nS = new Date(startDate);
     const e = new Date(endDate);
     const a = [];
 
     while (s <= e) {
-      a.push(s);
-      s = new Date(s.setDate(
+      a.push(nS);
+      nS = new Date(s.setDate(
         s.getDate() + 1
       ));
     }
