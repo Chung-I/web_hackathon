@@ -105,7 +105,7 @@ class CreateEventPage extends Component {
     const day = parseInt(event.target.id, 10);
     newDaysSelected[day] = !newDaysSelected[day];
     this.setState({ daysSelected: newDaysSelected });
-    this.handleBlockChange();
+    // this.handleBlockChange();
   }
 
   handleStartDateChange = event => {
