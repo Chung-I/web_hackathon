@@ -6,39 +6,27 @@ class UserFormFillingPage extends Component {
   constructor() {
     super();
     this.state = {
-      eventName: '',
+      eventUrl: '',
       startDate: '',
       endDate: '',
       startHour: '',
       endHour: '',
+      daysSelected: [1, 2, 3, 4, 5, 6, 7],
       userName: ''
     };
   }
 
   componentDidMount() {
-    fetch(`/api/form/${this.props.params.eventName}`).then(res => res.json())
+    fetch(`/api/form/${this.props.params.eventUrl}`)
+    .then(res => res.json())
     .then(json => {
-      const formData = JSON.parse(json);
       this.setState({
-        eventName: this.props.params.eventName,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        startHour: formData.startHour,
-        endHour: formData.endHour,
-      });
-    });
-  }
-
-  ComponentDidUpdate() {
-    fetch(`/api/form/${this.props.params.eventName}`).then(res => res.json())
-    .then(json => {
-      const formData = JSON.parse(json);
-      this.setState({
-        eventName: formData.eventName,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        startHour: formData.startHour,
-        endHour: formData.endHour
+        eventUrl: json.eventUrl,
+        startDate: json.startDate,
+        endDate: json.endDate,
+        startHour: json.startHour,
+        endHour: json.endHour,
+        eventTime: json.eventTime,
       });
     });
   }
@@ -50,7 +38,7 @@ class UserFormFillingPage extends Component {
   handleSubmit = e => {
     const data = {
       userName: this.state.userName,
-      userData: this.eventTBlk.state.blockSelected
+      userData: this.eventTBlk.state.eventTime
     };
     e.preventDefault();
     const myHeaders = new Headers();
@@ -77,11 +65,12 @@ class UserFormFillingPage extends Component {
             />
           </div>
           <EventTimeBlock
-            ref={eventTBlk => { this.eventTBlk = eventTBlk; }}
             startDate={this.state.startDate}
             endDate={this.state.endDate}
             startHour={this.state.startHour}
             endHour={this.state.endHour}
+            eventTime={this.state.eventTime}
+            daysSelected={this.state.daysSelected}
             clickable
           />
           <button type="submit" className="btn btn-primary">Submit</button>

@@ -11,7 +11,8 @@ class EventTimeBlock extends Component {
     endHour: PropTypes.number.isRequired,
     clickable: PropTypes.bool,
     handleBlockChange: PropTypes.func,
-    blockSelected: PropTypes.object
+    blockSelected: PropTypes.object,
+    daysSelected: PropTypes.array
   };
 
 
@@ -70,25 +71,35 @@ class EventTimeBlock extends Component {
     const hourRange = this.getAllHours(this.props.startHour, this.props.endHour);
 
     return (
-      <table className="time-able">
+      <table className="time-table">
         <tbody>{
           hourRange.map(hour => (
             <tr className="spaceUnder">{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
               .map(date => {
                 const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
-                return (
-                  <td
+                let hourable;
+                if (this.props.eventTime) {
+                  hourable = this.props.eventTime[timeBlock];
+                } else {
+                  hourable = true;
+                }
+                return (hourable ?
+                  (<td
                     onMouseDown={this.handleMouseDown}
                     onMouseOver={this.handleMouseOver}
                     onMouseUp={this.handleMouseUp}
-                    className="slot weekday space-at-right">
+                    className="slot space-at-right"
+                  >
                     <input
                       id={timeBlock}
                       type="checkbox"
                       onChange={e => this.props.handleBlockChange(e)}
-                    />
-                    {timeBlock}
-                  </td>
+                    />{timeBlock}
+                  </td>) : (
+                    <td
+                      className="slot space-at-right"
+                    >&nbsp;
+                    </td>)
                 );
               })}</tr>
             ))
