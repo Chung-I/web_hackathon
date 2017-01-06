@@ -135,11 +135,11 @@ class CreateEventPage extends Component {
       eventTime: this.state.blockSelected,
       userData: []
     };
-    console.log(data);
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
+    let form;
     try {
-      const form = await fetch(`/api/form`,
+      form = await fetch(`/api/form`,
         {
           method: 'POST',
           headers: myHeaders,
@@ -148,6 +148,10 @@ class CreateEventPage extends Component {
     } catch (err) {
       console.log(err);
     }
+    const eventUrl = form.eventUrl;
+    const adminUrl = form.adminUrl;
+    console.log(eventUrl);
+    console.log(adminUrl);
   }
 
   render() {
