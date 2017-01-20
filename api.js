@@ -90,13 +90,19 @@ router.post('/form/:eventUrl', async (req, res) => {
 
 router.put('/form/:eventUrl', async (req, res) => {
   const query = {
-    eventUrl: req.params.eventUrl
+    eventUrl: req.params.eventUrl,
+    'userData.userUrl': req.body.userUrl
   };
+  const update = {
+    $set: {
+      'userData.$.availableTime': req.body.availableTime
+    }
+  };
+  console.log(query);
   let form;
   try {
-    form = await Form.findOneAndUpdate(query, {
-      ...req.body
-    }, { new: true });
+    form = await Form.update(query, update);
+    console.log(form);
   } catch (err) {
     console.log(err);
   }

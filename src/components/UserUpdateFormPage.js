@@ -14,7 +14,8 @@ class UserUpdateFormPage extends Component {
       daysSelected: [1, 2, 3, 4, 5, 6, 7],
       blockChecked: {},
       blockEnabled: {},
-      userName: ''
+      userName: '',
+      userUrl: ''
     };
   }
 
@@ -41,6 +42,7 @@ class UserUpdateFormPage extends Component {
     console.log(data);
     this.setState({
       userName: data.userName,
+      userUrl,
       blockChecked: data.availableTime
     });
   }
@@ -59,8 +61,10 @@ class UserUpdateFormPage extends Component {
   handleSubmit = async e => {
     const data = {
       userName: this.state.userName,
+      userUrl: this.state.userUrl,
       availableTime: this.state.blockChecked
     };
+    console.log(data);
     e.preventDefault();
     const myHeaders = new Headers();
     console.log(data);
@@ -78,8 +82,7 @@ class UserUpdateFormPage extends Component {
     } catch (err) {
       console.log(err);
     }
-    const userUrl = json.userUrl;
-    window.location.href = `${this.state.eventUrl}/thanks/${userUrl}`;
+    window.location.href = `/form/${this.state.eventUrl}/thanks/${this.state.userUrl}`;
   }
 
   render() {
