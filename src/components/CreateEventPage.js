@@ -165,7 +165,6 @@ class CreateEventPage extends Component {
           startHour={this.state.startHour}
           endHour={this.state.endHour}
           daysSelected={this.state.daysSelected}
-          clickable={false}
           blockSelected={this.state.blockSelected}
           handleBlockChange={this.handleBlockChange}
         />
