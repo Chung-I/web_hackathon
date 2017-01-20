@@ -17,15 +17,74 @@ class CreateEventPage extends Component {
     const today = new Date();
     const sevenDaysLater = new Date();
     sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
+    const startDate = this.yyyymmdd(today);
+    const endDate = this.yyyymmdd(sevenDaysLater);
+    const startHour = 8;
+    const endHour = 21;
+
     this.state = {
       eventName: '',
       daysSelected: defaultDaysSelected,
-      startDate: this.yyyymmdd(today),
-      endDate: this.yyyymmdd(sevenDaysLater),
-      startHour: 8,
-      endHour: 21,
-      blockSelected: {}
+      startDate,
+      endDate,
+      startHour,
+      endHour,
+      blockChecked: {}
     };
+  }
+
+  getAllDays = (startDate, endDate) => {
+    const s = new Date(startDate);
+  // Temp variable for updating a[]
+    let nS = new Date(startDate);
+    const e = new Date(endDate);
+    const a = [];
+
+    while (s <= e) {
+      a.push(nS);
+      nS = new Date(s.setDate(
+        s.getDate() + 1
+      ));
+    }
+
+    return a;
+  };
+
+  getAllHours = (startHour, endHour) => {
+    let sh = +startHour;
+    const eh = +endHour;
+    const a = [];
+    while (sh <= eh) {
+      a.push(sh);
+      sh += 1;
+    }
+    return a;
+  };
+
+  yyyymmdd = date => {
+    const mm = date.getMonth() + 1; // getMonth() is zero-based
+    const dd = date.getDate();
+
+    return [date.getFullYear(),
+      (mm > 9 ? '' : '0') + mm,
+      (dd > 9 ? '' : '0') + dd,
+    ].join('-');
+  };
+
+  hh = hour => ((hour > 9 ? '' : '0') + hour);
+
+  getBlockEnabled = () => {
+    const blockEnabled = {};
+    const dateRange = this.getAllDays(this.state.startDate, this.state.endDate);
+    const hourRange = this.getAllHours(this.state.startHour, this.state.endHour);
+    hourRange.forEach(hour => {
+      dateRange.filter(date => (this.state.daysSelected[date.getDay()]))
+      .forEach(date => {
+        const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
+        blockEnabled[timeBlock] = true;
+      });
+    });
+    return blockEnabled;
   }
 
   yyyymmdd = date => {
@@ -52,6 +111,7 @@ class CreateEventPage extends Component {
     this.setState({ eventName: event.target.value });
   }
 
+
   handleDayChange = event => {
     const newDaysSelected = this.state.daysSelected;
     const day = parseInt(event.target.id, 10);
@@ -68,23 +128,19 @@ class CreateEventPage extends Component {
   }
 
   handleBlockChange = event => {
-    const newBlockSelected = this.state.blockSelected;
-    newBlockSelected[event.target.id] = !newBlockSelected[event.target.id];
-    this.setState({ blockSelected: newBlockSelected });
+    const newBlockChecked = this.state.blockChecked;
+    newBlockChecked[event.target.id] = !newBlockChecked[event.target.id];
+    this.setState({ blockChecked: newBlockChecked });
   }
 
-  handleSubmit = async e => {
-    const blockSelected = this.state.blockSelected;
-    e.preventDefault();
-    const eventTime = Object.keys(blockSelected).filter(
-      key => blockSelected[key]);
+  handleSubmit = async () => {
     const data = {
       eventName: this.state.eventName,
       startDate: this.state.startDate,
       endDate: this.state.endDate,
       startHour: this.state.startHour,
       endHour: this.state.endHour,
-      eventTime: this.state.blockSelected,
+      eventTime: this.state.blockChecked,
       userData: []
     };
     const myHeaders = new Headers();
@@ -108,10 +164,11 @@ class CreateEventPage extends Component {
     window.location.href = `form/${eventUrl}/links/${adminUrl}`;
   }
 
+
   render() {
     return (
       <div className="container col-md-12">
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <div className="form-group" onChange={this.handleEventNameChange}>
             <label htmlFor="UserName">User Name</label>
             <input
@@ -156,7 +213,10 @@ class CreateEventPage extends Component {
             )}
           </div>
           <div className="row">
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <a
+              className="btn btn-primary"
+              onClick={this.handleSubmit}
+            >Submit</a>
           </div>
         </form>
         <EventTimeBlock
@@ -165,7 +225,8 @@ class CreateEventPage extends Component {
           startHour={this.state.startHour}
           endHour={this.state.endHour}
           daysSelected={this.state.daysSelected}
-          blockSelected={this.state.blockSelected}
+          blockChecked={this.state.blockChecked}
+          blockEnabled={this.getBlockEnabled()}
           handleBlockChange={this.handleBlockChange}
         />
       </div>

@@ -12,7 +12,8 @@ class UserFormFillingPage extends Component {
       startHour: '',
       endHour: '',
       daysSelected: [1, 2, 3, 4, 5, 6, 7],
-      blockSelected: {},
+      blockEnabled: {},
+      blockChecked: {},
       userName: ''
     };
   }
@@ -21,13 +22,15 @@ class UserFormFillingPage extends Component {
     fetch(`/api/form/${this.props.params.eventUrl}`)
     .then(res => res.json())
     .then(json => {
+      console.log(json.eventTime);
       this.setState({
         eventUrl: json.eventUrl,
         startDate: json.startDate,
         endDate: json.endDate,
         startHour: json.startHour,
         endHour: json.endHour,
-        eventTime: json.eventTime,
+        blockEnabled: json.eventTime,
+        blockChecked: json.eventTime
       });
     });
   }
@@ -37,15 +40,15 @@ class UserFormFillingPage extends Component {
   }
 
   handleBlockChange = event => {
-    const newBlockSelected = this.state.blockSelected;
-    newBlockSelected[event.target.id] = !newBlockSelected[event.target.id];
-    this.setState({ blockSelected: newBlockSelected });
+    const newBlockChecked = this.state.blockChecked;
+    newBlockChecked[event.target.id] = !newBlockChecked[event.target.id];
+    this.setState({ blockChecked: newBlockChecked });
   }
 
   handleSubmit = async e => {
     const data = {
       userName: this.state.userName,
-      availableTime: this.state.blockSelected
+      availableTime: this.state.blockChecked
     };
     e.preventDefault();
     const myHeaders = new Headers();
@@ -88,6 +91,8 @@ class UserFormFillingPage extends Component {
             endHour={this.state.endHour}
             eventTime={this.state.eventTime}
             daysSelected={this.state.daysSelected}
+            blockChecked={this.state.blockChecked}
+            blockEnabled={this.state.blockEnabled}
             handleBlockChange={this.handleBlockChange}
           />
           <button type="submit" className="btn btn-primary">Submit</button>

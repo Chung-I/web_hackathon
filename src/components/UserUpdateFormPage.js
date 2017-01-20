@@ -12,7 +12,8 @@ class UserUpdateFormPage extends Component {
       startHour: '',
       endHour: '',
       daysSelected: [1, 2, 3, 4, 5, 6, 7],
-      blockSelected: {},
+      blockChecked: {},
+      blockEnabled: {},
       userName: ''
     };
   }
@@ -28,9 +29,9 @@ class UserUpdateFormPage extends Component {
         eventUrl: json.eventUrl,
         startDate: json.startDate,
         endDate: json.endDate,
-        startHour: json.startHour,
-        endHour: json.endHour,
-        eventTime: json.eventTime,
+        startHour: parseInt(json.startHour, 10),
+        endHour: parseInt(json.endHour, 10),
+        blockEnabled: json.eventTime
       });
     } catch (err) {
       console.log(err);
@@ -40,7 +41,7 @@ class UserUpdateFormPage extends Component {
     console.log(data);
     this.setState({
       userName: data.userName,
-      blockSelected: data.availableTime
+      blockChecked: data.availableTime
     });
   }
 
@@ -50,15 +51,15 @@ class UserUpdateFormPage extends Component {
   }
 
   handleBlockChange = event => {
-    const newBlockSelected = this.state.blockSelected;
-    newBlockSelected[event.target.id] = !newBlockSelected[event.target.id];
-    this.setState({ blockSelected: newBlockSelected });
+    const newBlockChecked = this.state.blockChecked;
+    newBlockChecked[event.target.id] = !newBlockChecked[event.target.id];
+    this.setState({ blockChecked: newBlockChecked });
   }
 
   handleSubmit = async e => {
     const data = {
       userName: this.state.userName,
-      availableTime: this.state.blockSelected
+      availableTime: this.state.blockChecked
     };
     e.preventDefault();
     const myHeaders = new Headers();
@@ -99,7 +100,8 @@ class UserUpdateFormPage extends Component {
             endDate={this.state.endDate}
             startHour={this.state.startHour}
             endHour={this.state.endHour}
-            eventTime={this.state.eventTime}
+            blockChecked={this.state.blockChecked}
+            blockEnabled={this.state.blockEnabled}
             daysSelected={this.state.daysSelected}
             handleBlockChange={this.handleBlockChange}
           />
