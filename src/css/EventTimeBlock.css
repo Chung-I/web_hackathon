@@ -9,6 +9,10 @@
     font-size: 12px;
 }
 
+.no-line-break {
+  white-space: nowrap;
+}
+
 .weekday {
     background: #EFEFEF;
 }

@@ -30,7 +30,7 @@ class UserFormFillingPage extends Component {
         startHour: json.startHour,
         endHour: json.endHour,
         blockEnabled: json.eventTime,
-        blockChecked: json.eventTime
+        blockChecked: {}
       });
     });
   }

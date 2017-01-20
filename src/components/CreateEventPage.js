@@ -134,13 +134,19 @@ class CreateEventPage extends Component {
   }
 
   handleSubmit = async () => {
+    const blockEnabled = this.getBlockEnabled();
+    const eventTime = {};
+    Object.getOwnPropertyNames(blockEnabled).forEach(key => {
+      const available = this.state.blockChecked[key];
+      if (available) eventTime[key] = this.state.blockChecked[key];
+    });
     const data = {
       eventName: this.state.eventName,
       startDate: this.state.startDate,
       endDate: this.state.endDate,
       startHour: this.state.startHour,
       endHour: this.state.endHour,
-      eventTime: this.state.blockChecked,
+      eventTime,
       userData: []
     };
     const myHeaders = new Headers();

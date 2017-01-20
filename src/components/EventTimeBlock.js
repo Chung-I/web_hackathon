@@ -84,7 +84,7 @@ class EventTimeBlock extends Component {
                     onMouseDown={this.handleMouseDown}
                     onMouseOver={this.handleMouseOver}
                     onMouseUp={this.handleMouseUp}
-                    className="slot space-at-right"
+                    className="slot no-line-break space-at-right"
                   >
                     <input
                       id={timeBlock}
@@ -94,7 +94,7 @@ class EventTimeBlock extends Component {
                     />{timeBlock}
                   </td>) : (
                     <td
-                      className="slot space-at-right"
+                      className="slot no-line-break space-at-right"
                     >&nbsp;
                     </td>)
                 );
