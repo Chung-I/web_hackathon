@@ -50,6 +50,43 @@ router.post('/form', async (req, res) => {
   }
 });
 
+router.post('/form/:eventUrl', async (req, res) => {
+  function randomString(length, chars) {
+    let result = '';
+    for (let i = length; i > 0; i--) {
+      result += chars[Math.round(Math.random() * (chars.length - 1))];
+    }
+    return result;
+  }
+
+  const userUrl = randomString(6, '4st5cdTef1032ikVCWXFjvUn67opLMghNDaqrRPQmSYuZExO89yzABbGHwIJKl');
+  const body = req.body;
+  body.userUrl = userUrl;
+
+  const query = {
+    eventUrl: req.params.eventUrl
+  };
+
+  let form;
+  try {
+    form = await Form.findOne(query);
+    const newUserData = form.userData;
+    newUserData.push(body);
+    console.log(newUserData);
+    try {
+      form = await Form.findOneAndUpdate(query,
+        { userData: newUserData }, { new: true });
+      res.json(body);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('unable to update');
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(404).send('event not found');
+  }
+});
+
 
 router.put('/form/:eventUrl', async (req, res) => {
   const query = {

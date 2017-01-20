@@ -9,6 +9,8 @@ import CreateEventPage from './components/CreateEventPage';
 import UserFormFillingPage from './components/UserFormFillingPage';
 import PollResultPage from './components/PollResultPage';
 import JumpPage from './components/JumpPage';
+import UserJumpPage from './components/UserJumpPage';
+import UserUpdateFormPage from './components/UserUpdateFormPage';
 
 render(
   (<Router history={browserHistory}>
@@ -16,6 +18,8 @@ render(
     <Route path="/create" component={CreateEventPage} />
     <Route path="/form/:eventUrl" component={UserFormFillingPage} />
     <Route path="/form/:eventUrl/links/:adminUrl" component={JumpPage} />
+    <Route path="/form/:eventUrl/thanks/:userUrl" component={UserJumpPage} />
+    <Route path="/form/:eventUrl/update/:userUrl" component={UserUpdateFormPage} />
     <Route path="/result" component={PollResultPage} />
   </Router>),
   document.getElementById('root'),

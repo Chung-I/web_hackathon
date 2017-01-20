@@ -12,6 +12,7 @@ class UserFormFillingPage extends Component {
       startHour: '',
       endHour: '',
       daysSelected: [1, 2, 3, 4, 5, 6, 7],
+      blockSelected: {},
       userName: ''
     };
   }
@@ -35,20 +36,36 @@ class UserFormFillingPage extends Component {
     this.setState({ userName: event.target.value });
   }
 
-  handleSubmit = e => {
+  handleBlockChange = event => {
+    const newBlockSelected = this.state.blockSelected;
+    newBlockSelected[event.target.id] = !newBlockSelected[event.target.id];
+    this.setState({ blockSelected: newBlockSelected });
+  }
+
+  handleSubmit = async e => {
     const data = {
       userName: this.state.userName,
-      userData: this.eventTBlk.state.eventTime
+      availableTime: this.state.blockSelected
     };
     e.preventDefault();
     const myHeaders = new Headers();
+    console.log(data);
     myHeaders.append('Content-Type', 'application/json');
-    fetch(`/api/form/${this.state.eventName}/${this.state.userName}`,
-      {
-        method: 'PUT',
-        headers: myHeaders,
-        body: JSON.stringify(data),
-      });
+    let res;
+    let json;
+    try {
+      res = await fetch(`/api/form/${this.state.eventUrl}`,
+        {
+          method: 'POST',
+          headers: myHeaders,
+          body: JSON.stringify(data),
+        });
+      json = await res.json();
+    } catch (err) {
+      console.log(err);
+    }
+    const userUrl = json.userUrl;
+    window.location.href = `${this.state.eventUrl}/thanks/${userUrl}`;
   }
 
   render() {
@@ -71,7 +88,7 @@ class UserFormFillingPage extends Component {
             endHour={this.state.endHour}
             eventTime={this.state.eventTime}
             daysSelected={this.state.daysSelected}
-            clickable
+            handleBlockChange={this.handleBlockChange}
           />
           <button type="submit" className="btn btn-primary">Submit</button>
         </form>
