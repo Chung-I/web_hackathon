@@ -26,6 +26,54 @@ router.get('/form/:eventUrl', async (req, res) => {
   res.json(form);
 });
 
+
+router.get('/form/:eventUrl/links/:adminUrl', async (req, res) => {
+  const query = {
+    eventUrl: req.params.eventUrl,
+    adminUrl: req.params.adminUrl
+  };
+  let form;
+  try {
+    form = await Form.findOne(query);
+  } catch (err) {
+    console.log(err);
+  }
+  if (form === null) {
+    res.status(404).send('event not found');
+  } else {
+    res.status(200);
+  }
+});
+
+router.get('/form/:eventUrl/thanks/:userUrl', async (req, res) => {
+  const query = {
+    eventUrl: req.params.eventUrl,
+    'userData.userUrl': req.params.userUrl
+  };
+  let form;
+  try {
+    form = await Form.findOne(query);
+  } catch (err) {
+    console.log(err);
+  }
+  res.json(form);
+});
+
+router.get('/form/:eventUrl/update/:userUrl', async (req, res) => {
+  const query = {
+    eventUrl: req.params.eventUrl,
+    'userData.userUrl': req.params.userUrl
+  };
+  let form;
+  try {
+    form = await Form.findOne(query);
+  } catch (err) {
+    console.log(err);
+  }
+  res.json(form);
+});
+
+
 router.post('/form', async (req, res) => {
   function randomString(length, chars) {
     let result = '';

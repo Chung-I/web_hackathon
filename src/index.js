@@ -16,12 +16,12 @@ import InvalidUrlPage from './components/InvalidUrlPage';
 
 const validateUrl = async (nextState, replace, callback) => {
   let res;
-  let form;
+  let code;
   try {
-    res = await fetch(`/api${nextState.location.pathname}`);
-    form = await res.json();
-    if (form === null) {
-      console.log('replace');
+    const url = `/api${nextState.location.pathname}`;
+    res = await fetch(url);
+    code = await res.status();
+    if (code === 404) {
       replace({ pathname: '/invalidUrl' });
     }
     callback();
@@ -36,9 +36,9 @@ render(
     <Route path="/invalidUrl" component={InvalidUrlPage} />
     <Route path="/create" component={CreateEventPage} />
     <Route path="/form/:eventUrl" component={UserFormFillingPage} onEnter={validateUrl} />
-    <Route path="/form/:eventUrl/links/:adminUrl" component={JumpPage} />
-    <Route path="/form/:eventUrl/thanks/:userUrl" component={UserJumpPage} />
-    <Route path="/form/:eventUrl/update/:userUrl" component={UserUpdateFormPage} />
+    <Route path="/form/:eventUrl/links/:adminUrl" component={JumpPage} onEnter={validateUrl} />
+    <Route path="/form/:eventUrl/thanks/:userUrl" component={UserJumpPage} onEnter={validateUrl} />
+    <Route path="/form/:eventUrl/update/:userUrl" component={UserUpdateFormPage} onEnter={validateUrl} />
     <Route path="/result" component={PollResultPage} />
   </Router>),
   document.getElementById('root'),

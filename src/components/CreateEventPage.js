@@ -167,6 +167,7 @@ class CreateEventPage extends Component {
 
     const eventUrl = json.eventUrl;
     const adminUrl = json.adminUrl;
+    console.log(`adminUrl: ${adminUrl}`);
     window.location.href = `form/${eventUrl}/links/${adminUrl}`;
   }
 
