@@ -23,7 +23,11 @@ router.get('/form/:eventUrl', async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-  res.json(form);
+  if (form === null) {
+    res.status(404).send('event not found');
+  } else {
+    res.status(200).json(form);
+  }
 });
 
 
@@ -39,9 +43,9 @@ router.get('/form/:eventUrl/links/:adminUrl', async (req, res) => {
     console.log(err);
   }
   if (form === null) {
-    res.status(404).send('event not found');
+    res.status(404).send('event not found or wrong adminUrl');
   } else {
-    res.status(200);
+    res.status(200).send('success');
   }
 });
 
@@ -56,7 +60,11 @@ router.get('/form/:eventUrl/thanks/:userUrl', async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-  res.json(form);
+  if (form === null) {
+    res.status(404).send('event not found or wrong userUrl');
+  } else {
+    res.status(200).send('success');
+  }
 });
 
 router.get('/form/:eventUrl/update/:userUrl', async (req, res) => {
@@ -70,7 +78,11 @@ router.get('/form/:eventUrl/update/:userUrl', async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-  res.json(form);
+  if (form === null) {
+    res.status(404).send('event not found or wrong userUrl');
+  } else {
+    res.status(200).send('success');
+  }
 });
 
 
@@ -86,10 +98,8 @@ router.post('/form', async (req, res) => {
   const eventUrl = randomString(6, '045cdTWXef132ijklUVmn67opLMghNqrRSYuZEFstvxO89yzABCDabGHwIJKPQ');
   const adminUrl = randomString(6, '4st5cdTef1032ikVCWXFjvUn67opLMghNDaqrRPQmSYuZExO89yzABbGHwIJKl');
   const body = req.body;
-  console.log(body);
   body.eventUrl = eventUrl;
   body.adminUrl = adminUrl;
-  console.log(body);
   try {
     const form = await Form.create(body);
     res.json(form);
@@ -120,7 +130,6 @@ router.post('/form/:eventUrl', async (req, res) => {
     form = await Form.findOne(query);
     const newUserData = form.userData;
     newUserData.push(body);
-    console.log(newUserData);
     try {
       form = await Form.findOneAndUpdate(query,
         { userData: newUserData }, { new: true });
@@ -146,11 +155,9 @@ router.put('/form/:eventUrl', async (req, res) => {
       'userData.$.availableTime': req.body.availableTime
     }
   };
-  console.log(query);
   let form;
   try {
     form = await Form.update(query, update);
-    console.log(form);
   } catch (err) {
     console.log(err);
   }

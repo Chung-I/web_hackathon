@@ -20,7 +20,7 @@ const validateUrl = async (nextState, replace, callback) => {
   try {
     const url = `/api${nextState.location.pathname}`;
     res = await fetch(url);
-    code = await res.status();
+    code = res.status;
     if (code === 404) {
       replace({ pathname: '/invalidUrl' });
     }
