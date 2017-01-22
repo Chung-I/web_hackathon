@@ -18,20 +18,23 @@ class UserFormFillingPage extends Component {
     };
   }
 
-  componentDidMount() {
-    fetch(`/api/form/${this.props.params.eventUrl}`)
-    .then(res => res.json())
-    .then(json => {
-      console.log(json.eventTime);
-      this.setState({
-        eventUrl: json.eventUrl,
-        startDate: json.startDate,
-        endDate: json.endDate,
-        startHour: json.startHour,
-        endHour: json.endHour,
-        blockEnabled: json.eventTime,
-        blockChecked: {}
-      });
+  componentWillMount = async () => {
+    let res;
+    let json;
+    try {
+      res = await fetch(`/api/form/${this.props.params.eventUrl}`);
+      json = await res.json();
+    } catch (err) {
+      console.log(err);
+    }
+    this.setState({
+      eventUrl: json.eventUrl,
+      startDate: json.startDate,
+      endDate: json.endDate,
+      startHour: json.startHour,
+      endHour: json.endHour,
+      blockEnabled: json.eventTime,
+      blockChecked: {}
     });
   }
 
