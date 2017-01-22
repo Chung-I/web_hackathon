@@ -2,6 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import 'babel-polyfill';
 import EventTimeBlock from './EventTimeBlock';
 import fetch from 'isomorphic-fetch';
+import DatePicker from 'material-ui/DatePicker';
+
+
+const optionsStyle = {
+  maxWidth: 255,
+  marginRight: 'auto',
+};
+
 
 class CreateEventPage extends Component {
   static propTypes = {
@@ -50,6 +58,7 @@ class CreateEventPage extends Component {
     return a;
   };
 
+
   getAllHours = (startHour, endHour) => {
     let sh = +startHour;
     const eh = +endHour;
@@ -61,17 +70,6 @@ class CreateEventPage extends Component {
     return a;
   };
 
-  yyyymmdd = date => {
-    const mm = date.getMonth() + 1; // getMonth() is zero-based
-    const dd = date.getDate();
-
-    return [date.getFullYear(),
-      (mm > 9 ? '' : '0') + mm,
-      (dd > 9 ? '' : '0') + dd,
-    ].join('-');
-  };
-
-  hh = hour => ((hour > 9 ? '' : '0') + hour);
 
   getBlockEnabled = () => {
     const blockEnabled = {};
@@ -87,6 +85,10 @@ class CreateEventPage extends Component {
     return blockEnabled;
   }
 
+
+  hh = hour => ((hour > 9 ? '' : '0') + hour);
+
+
   yyyymmdd = date => {
     const mm = date.getMonth() + 1; // getMonth() is zero-based
     const dd = date.getDate();
@@ -97,15 +99,6 @@ class CreateEventPage extends Component {
     ].join('-');
   };
 
-  yyyymmdd = date => {
-    const mm = date.getMonth() + 1; // getMonth() is zero-based
-    const dd = date.getDate();
-
-    return [date.getFullYear(),
-      (mm > 9 ? '' : '0') + mm,
-      (dd > 9 ? '' : '0') + dd,
-    ].join('-');
-  };
 
   handleEventNameChange = event => {
     this.setState({ eventName: event.target.value });
@@ -167,7 +160,6 @@ class CreateEventPage extends Component {
 
     const eventUrl = json.eventUrl;
     const adminUrl = json.adminUrl;
-    console.log(`adminUrl: ${adminUrl}`);
     window.location.href = `form/${eventUrl}/links/${adminUrl}`;
   }
 
@@ -184,6 +176,18 @@ class CreateEventPage extends Component {
               id="eventName"
               placeholder="Enter Event Name"
               value={this.state.eventName}
+            />
+          </div>
+          <div style={optionsStyle}>
+            <DatePicker
+              onChange={this.handleStartDateChange}
+              floatingLabelText="Start Date"
+              defaultDate={Date(this.state.startDate)}
+            />
+            <DatePicker
+              onChange={this.handleEndDateChange}
+              floatingLabelText="End Date"
+              defaultDate={Date(this.state.endDate)}
             />
           </div>
           <div className="form-group">
