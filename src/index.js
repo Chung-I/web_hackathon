@@ -14,22 +14,20 @@ import UserUpdateFormPage from './components/UserUpdateFormPage';
 import InvalidUrlPage from './components/InvalidUrlPage';
 
 
-const validateUrl = (nextState, replace, callback) => {
-  console.log(nextState.location.pathname);
-  fetch(`/api${nextState.location.pathname}`)
-      .then(response => response.json())
-      .then(form => {
-        console.log(form);
-        if (form === null) {
-          console.log('replace');
-          replace({ pathname: '/invalidUrl' });
-        }
-        callback();
-      })
-      .catch(error => {
-        // do some error handling here
-        callback(error);
-      });
+const validateUrl = async (nextState, replace, callback) => {
+  let res;
+  let form;
+  try {
+    res = await fetch(`/api${nextState.location.pathname}`);
+    form = await res.json();
+    if (form === null) {
+      console.log('replace');
+      replace({ pathname: '/invalidUrl' });
+    }
+    callback();
+  } catch (err) {
+    callback(err);
+  }
 };
 
 render(
