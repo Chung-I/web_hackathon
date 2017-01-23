@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'babel-polyfill';
 import EventTimeBlock from './EventTimeBlock';
+import FlatButton from 'material-ui/FlatButton';
 // import fetch from 'isomorphic-fetch';
 import rd3 from 'rd3';
 
@@ -16,7 +17,9 @@ class PollResultPage extends Component {
       count: 0, // count = (userdata.available = true) . length
       total: 10, // total = usedata.length
       bgColor: 'white',
-      open: false
+      open: false,
+      mouseTimeBlock: '',
+      userData: []
     };
   }
 
@@ -51,6 +54,15 @@ class PollResultPage extends Component {
     this.setState({ open: false });
   };
 
+  handleBlockMouseOver = timeBlock => {
+    this.setState({ mouseTimeBlock: timeBlock });
+  };
+
+  handleBlockMouseLeave = () => {
+    console.log("blockMouseLeave");
+    this.setState({ mouseTimeBlock: '' });
+  };
+
   count2color = (count, total) => {
     const colorPcg = count / total;
 
@@ -69,7 +81,8 @@ class PollResultPage extends Component {
 
     const colorResult = `#${redResult}${greenResult}00`;
     return colorResult;
-  }
+  };
+
 
   render() {
 // Color change section
@@ -113,40 +126,40 @@ class PollResultPage extends Component {
     ];
 
     return (
-      <div className="pollResult">
-        <h1>The result - without data flow</h1>
-        <input type="text" value={this.state.count} onChange={this.handleCountChange} />
-
+      <div className="pollResult container">
+        <h1>Results</h1>
+        <div className="row">
+          <div className="col col-md-2">
+            {this.state.userData.map(user => {
+              let available = !user.availableTime[this.state.mouseTimeBlock];
+              if (this.state.mouseTimeBlock === '') {
+                available = true;
+              }
+              return (
+                <FlatButton
+                  label={user.userName}
+                  disabled={available}
+                />);
+            })}
+          </div>
+          <div className="col col-md-10">
+            <EventTimeBlock
+              startDate={this.state.startDate}
+              endDate={this.state.endDate}
+              startHour={this.state.startHour}
+              endHour={this.state.endHour}
+              blockEnabled={this.state.blockEnabled}
+              handleBlockChange={this.handleBlockChange}
+              open={this.state.open}
+              handleOpen={this.handleOpen}
+              handleClose={this.handleClose}
+              handleMouseOver={this.handleBlockMouseOver}
+              handleMouseLeave={this.handleBlockMouseLeave}
+              userData={this.state.userData}
+            />
+          </div>
+        </div>
         <hr />
-
-        <button style={btnstyle}>{this.state.count}</button>
-        <button style={btnstyle}>{this.state.count}</button>
-        <button style={btnstyle}>{this.state.count}</button>
-        <button style={btnstyle}>{this.state.count}</button>
-
-        <hr />
-        <EventTimeBlock
-          startDate={this.state.startDate}
-          endDate={this.state.endDate}
-          startHour={this.state.startHour}
-          endHour={this.state.endHour}
-          blockEnabled={this.state.blockEnabled}
-          handleBlockChange={this.handleBlockChange}
-          open={this.state.open}
-          handleOpen={this.handleOpen}
-          handleClose={this.handleClose}
-          userData={this.state.userData}
-        />
-        <hr />
-        <PollChart
-          data={chartData}
-          width={450}
-          height={400}
-          radius={110}
-          innerRadius={20}
-          sectorBorderColor="white"
-          title="Result Chart"
-        />
       </div>
     );
   }

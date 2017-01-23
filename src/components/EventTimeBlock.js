@@ -1,11 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import 'babel-polyfill';
-import fetch from 'isomorphic-fetch';
 import '../css/EventTimeBlock.css';
 import Checkbox from 'material-ui/Checkbox';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
-import DatePicker from 'material-ui/DatePicker';
 import FlatButton from 'material-ui/FlatButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn,
   TableRow, TableRowColumn } from 'material-ui/Table';
@@ -24,23 +22,10 @@ class EventTimeBlock extends Component {
     open: PropTypes.bool,
     handleOpen: PropTypes.func,
     handleClose: PropTypes.func,
+    handleMouseOver: PropTypes.func,
+    handleMouseLeave: PropTypes.func,
     userData: PropTypes.array
   };
-
-  handleMouseDown = e => {
-    console.log(`mouse down: ${e.target}`);
-  }
-
-  handleMouseUp = e => {
-    console.log(`mouse up: ${e.target}`);
-  }
-
-  handleMouseOver = e => {
-    console.log(`mouse over: ${e.target}`);
-  }
-
-
-  
 
   getAllDays = (startDate, endDate) => {
     const s = new Date(startDate);
@@ -86,6 +71,26 @@ class EventTimeBlock extends Component {
     const dateRange = this.getAllDays(this.props.startDate, this.props.endDate);
     const hourRange = this.getAllHours(this.props.startHour, this.props.endHour);
 
+
+
+    const count2color = (count, total) => {
+      const colorPcg = count / total;
+      let labelColor = '#ffffff';
+      const redPcg = Math.round(255 * (((1 - colorPcg) * 10) / 10));
+
+      if (redPcg > 128) labelColor = '#000000';
+
+      let redResult = redPcg.toString(16);
+
+      if (redResult === '0') {
+        redResult = '00';
+      }
+
+      const bgColor = `#${redResult}${redResult}${redResult}`;
+      return { bgColor, labelColor };
+    };
+
+
     const element = timeBlock => {
       const userTimeTable = (timeBlock, userData) => (
         <Table>
@@ -116,6 +121,8 @@ class EventTimeBlock extends Component {
           onTouchTap={this.props.handleClose}
         />,
       ];
+      const count = this.props.userData.filter(user => (
+        user.availableTime[timeBlock])).length;
       return (this.props.checkable ?
       (<Checkbox
         id={timeBlock}
@@ -128,17 +135,9 @@ class EventTimeBlock extends Component {
         <RaisedButton
           label={timeBlock}
           onTouchTap={() => this.props.handleOpen()}
-          backgroundColor="orange"
+          labelColor={count2color(count, this.props.userData.length).labelColor}
+          backgroundColor={count2color(count, this.props.userData.length).bgColor}          
         />
-        <Dialog
-          title={`poll result for time block: ${timeBlock}`}
-          actions={actions}
-          modal={false}
-          open={this.props.open}
-          onRequestClose={() => this.props.handleClose()}
-        >
-          {userTimeTable(timeBlock, this.props.userData)}
-        </Dialog>
       </div>));
     };
 
@@ -156,13 +155,13 @@ class EventTimeBlock extends Component {
                 return (hourable ?
                   (<td
                     key={date}
-                    onMouseDown={this.handleMouseDown}
-                    onMouseOver={this.handleMouseOver}
-                    onMouseUp={this.handleMouseUp}
+                    onMouseOver={() => this.props.handleMouseOver(timeBlock)}
+                    onMouseLeave={() => this.props.handleMouseLeave()}
                     className="slot no-line-break space-at-right"
                   >{element(timeBlock)}
                   </td>) : (
                     <td
+                      key={date}
                       className="slot no-line-break space-at-right"
                     >&nbsp;
                     </td>)
@@ -182,7 +181,9 @@ EventTimeBlock.defaultProps = {
   open: false,
   handleOpen: () => {},
   handleClose: () => {},
-  userData: []
+  userData: [],
+  handleMouseOver: () => {},
+  handleMouseLeave: () => {}
 };
 
 export default EventTimeBlock;
