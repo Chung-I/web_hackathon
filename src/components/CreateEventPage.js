@@ -235,6 +235,7 @@ class CreateEventPage extends Component {
             label="Submit"
             primary
             onClick={this.handleSubmit}
+            disabled={this.state.errorText === 'Required'}
           />
         </div>
         <br />

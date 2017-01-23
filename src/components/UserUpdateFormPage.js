@@ -27,7 +27,6 @@ class UserUpdateFormPage extends Component {
     try {
       res = await fetch(`/api/form/${this.props.params.eventUrl}`);
       json = await res.json();
-
       this.setState({
         eventUrl: json.eventUrl,
         startDate: json.startDate,
@@ -42,10 +41,11 @@ class UserUpdateFormPage extends Component {
     const userUrl = this.props.params.userUrl;
     const data = json.userData.find(user => user.userUrl === userUrl);
     console.log(data);
+    const blockChecked = (data.availableTime === null) ? {} : data.availableTime;
     this.setState({
       userName: data.userName,
       userUrl,
-      blockChecked: data.availableTime
+      blockChecked,
     });
   }
 
