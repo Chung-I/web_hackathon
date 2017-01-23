@@ -238,6 +238,7 @@ class CreateEventPage extends Component {
             onClick={this.handleSubmit}
           />
         </div>
+        <br />
       </div>
     );
   }

@@ -1,5 +1,6 @@
 // entry page for event creator
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class HomePage extends Component {
   render() {
@@ -12,7 +13,11 @@ class HomePage extends Component {
         </div>
         <div className="row">
           <div className="col-md-12 text-center">
-            <a className="btn btn-primary" href="/create">建立事件</a>
+            <RaisedButton
+              href="/create"
+              label="建立事件"
+              primary
+            />
           </div>
         </div>
       </div>

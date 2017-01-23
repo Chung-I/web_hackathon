@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 import '../css/EventTimeBlock.css';
+import Checkbox from 'material-ui/Checkbox';
 
 class EventTimeBlock extends Component {
   static propTypes = {
@@ -86,12 +87,13 @@ class EventTimeBlock extends Component {
                     onMouseUp={this.handleMouseUp}
                     className="slot no-line-break space-at-right"
                   >
-                    <input
+                    <Checkbox
                       id={timeBlock}
+                      label={timeBlock}
                       type="checkbox"
                       checked={this.props.blockChecked[timeBlock] || false}
-                      onChange={e => this.props.handleBlockChange(e)}
-                    />{timeBlock}
+                      onCheck={e => this.props.handleBlockChange(e)}
+                    />
                   </td>) : (
                     <td
                       className="slot no-line-break space-at-right"
