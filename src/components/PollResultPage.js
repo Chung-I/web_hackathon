@@ -31,7 +31,8 @@ class PollResultPage extends Component {
           endDate: json.endDate,
           startHour: parseInt(json.startHour, 10),
           endHour: parseInt(json.endHour, 10),
-          blockEnabled: json.eventTime
+          blockEnabled: json.eventTime,
+          userData: json.userData
         });
       });
   }
@@ -49,6 +50,26 @@ class PollResultPage extends Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  count2color = (count, total) => {
+    const colorPcg = count / total;
+
+    const redPcg = Math.round(255 * (((1 - colorPcg) * 10) / 10));
+    const greenPcg = Math.round(255 * ((colorPcg * 10) / 10));
+
+    let redResult = redPcg.toString(16);
+    let greenResult = greenPcg.toString(16);
+
+    if (redResult === '0') {
+      redResult = '00';
+    }
+    if (greenResult === '0') {
+      greenResult = '00';
+    }
+
+    const colorResult = `#${redResult}${greenResult}00`;
+    return colorResult;
+  }
 
   render() {
 // Color change section
@@ -114,6 +135,7 @@ class PollResultPage extends Component {
           open={this.state.open}
           handleOpen={this.handleOpen}
           handleClose={this.handleClose}
+          userData={this.state.userData}
         />
         <hr />
         <PollChart

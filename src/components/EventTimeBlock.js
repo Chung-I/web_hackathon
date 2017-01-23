@@ -24,6 +24,7 @@ class EventTimeBlock extends Component {
     open: PropTypes.bool,
     handleOpen: PropTypes.func,
     handleClose: PropTypes.func,
+    userData: PropTypes.array
   };
 
   handleMouseDown = e => {
@@ -37,6 +38,9 @@ class EventTimeBlock extends Component {
   handleMouseOver = e => {
     console.log(`mouse over: ${e.target}`);
   }
+
+
+  
 
   getAllDays = (startDate, endDate) => {
     const s = new Date(startDate);
@@ -82,50 +86,37 @@ class EventTimeBlock extends Component {
     const dateRange = this.getAllDays(this.props.startDate, this.props.endDate);
     const hourRange = this.getAllHours(this.props.startHour, this.props.endHour);
 
-    const TableExampleSimple = () => (
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHeaderColumn>ID</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Status</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableRowColumn>1</TableRowColumn>
-            <TableRowColumn>John Smith</TableRowColumn>
-            <TableRowColumn>Employed</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>2</TableRowColumn>
-            <TableRowColumn>Randal White</TableRowColumn>
-            <TableRowColumn>Unemployed</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>3</TableRowColumn>
-            <TableRowColumn>Stephanie Sanders</TableRowColumn>
-            <TableRowColumn>Employed</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>4</TableRowColumn>
-            <TableRowColumn>Steve Brown</TableRowColumn>
-            <TableRowColumn>Employed</TableRowColumn>
-          </TableRow>
-        </TableBody>
-      </Table>
-    );
-
-    const actions = [
-      <FlatButton
-        label="Ok"
-        primary
-        keyboardFocused
-        onTouchTap={this.props.handleClose}
-      />,
-    ];
-
-    const element = timeBlock => (this.props.checkable ?
+    const element = timeBlock => {
+      const userTimeTable = (timeBlock, userData) => (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+              <TableHeaderColumn>Status</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            {userData.map(user => {
+              const status = user.availableTime[timeBlock];
+              return (
+                <TableRow key={user.userUrl}>
+                  <TableRowColumn>{user.userName}</TableRowColumn>
+                  <TableRowColumn>{(status === true ? 'available' : 'not available')}</TableRowColumn>
+                </TableRow>);
+            }
+            )}
+          </TableBody>
+        </Table>
+      );
+      const actions = [
+        <FlatButton
+          label="Ok"
+          primary
+          keyboardFocused
+          onTouchTap={this.props.handleClose}
+        />,
+      ];
+      return (this.props.checkable ?
       (<Checkbox
         id={timeBlock}
         label={timeBlock}
@@ -137,6 +128,7 @@ class EventTimeBlock extends Component {
         <RaisedButton
           label={timeBlock}
           onTouchTap={() => this.props.handleOpen()}
+          backgroundColor="orange"
         />
         <Dialog
           title={`poll result for time block: ${timeBlock}`}
@@ -145,21 +137,25 @@ class EventTimeBlock extends Component {
           open={this.props.open}
           onRequestClose={() => this.props.handleClose()}
         >
-          Open a Date Picker dialog from within a dialog.
-          <DatePicker hintText="Date Picker" />
+          {userTimeTable(timeBlock, this.props.userData)}
         </Dialog>
       </div>));
+    };
 
     return (
       <table className="time-table">
         <tbody>{
           hourRange.map(hour => (
-            <tr className="spaceUnder">{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
+            <tr
+              key={hour}
+              className="spaceUnder"
+            >{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
               .map(date => {
                 const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
                 const hourable = this.props.blockEnabled[timeBlock];
                 return (hourable ?
                   (<td
+                    key={date}
                     onMouseDown={this.handleMouseDown}
                     onMouseOver={this.handleMouseOver}
                     onMouseUp={this.handleMouseUp}
@@ -185,7 +181,8 @@ EventTimeBlock.defaultProps = {
   daysSelected: [1, 2, 3, 4, 5, 6, 7],
   open: false,
   handleOpen: () => {},
-  handleClose: () => {}
+  handleClose: () => {},
+  userData: []
 };
 
 export default EventTimeBlock;
