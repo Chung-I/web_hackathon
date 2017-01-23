@@ -19,8 +19,12 @@ class JumpPage extends Component {
   }
 
   render() {
+    const style = {
+      textAlign: 'center',
+      paddingTop: 100
+    };
     return (
-      <div className="container">
+      <div style={style}>
         <div className="row">
           <div className="col-md-12 text-center">
             <h1>歡迎來到easyScheduling!</h1>
