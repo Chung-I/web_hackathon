@@ -3,7 +3,7 @@ import 'babel-polyfill';
 import EventTimeBlock from './EventTimeBlock';
 import fetch from 'isomorphic-fetch';
 import DatePicker from 'material-ui/DatePicker';
-
+import clone from '../utils/utils';
 
 const optionsStyle = {
   maxWidth: 255,
@@ -22,11 +22,9 @@ class CreateEventPage extends Component {
     props.days.forEach((day, idx) => {
       defaultDaysSelected[idx] = true;
     });
-    const today = new Date();
-    const sevenDaysLater = new Date();
-    sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
-    const startDate = this.yyyymmdd(today);
-    const endDate = this.yyyymmdd(sevenDaysLater);
+    const startDate = new Date();
+    let endDate = new Date();
+    endDate = new Date(endDate.getDate() + 7);
     const startHour = 8;
     const endHour = 21;
 
@@ -42,10 +40,10 @@ class CreateEventPage extends Component {
   }
 
   getAllDays = (startDate, endDate) => {
-    const s = new Date(startDate);
+    const s = clone(startDate);
   // Temp variable for updating a[]
-    let nS = new Date(startDate);
-    const e = new Date(endDate);
+    let nS = clone(startDate);
+    const e = clone(endDate);
     const a = [];
 
     while (s <= e) {
@@ -112,12 +110,12 @@ class CreateEventPage extends Component {
     this.setState({ daysSelected: newDaysSelected });
   }
 
-  handleStartDateChange = event => {
-    this.setState({ startDate: event.target.value });
+  handleStartDateChange = (event, date) => {
+    this.setState({ startDate: date });
   }
 
-  handleEndDateChange = event => {
-    this.setState({ endDate: event.target.value });
+  handleEndDateChange = (event, date) => {
+    this.setState({ endDate: date });
   }
 
   handleBlockChange = event => {
@@ -135,8 +133,8 @@ class CreateEventPage extends Component {
     });
     const data = {
       eventName: this.state.eventName,
-      startDate: this.state.startDate,
-      endDate: this.state.endDate,
+      startDate: this.yyyymmdd(this.state.startDate),
+      endDate: this.yyyymmdd(this.state.endDate),
       startHour: this.state.startHour,
       endHour: this.state.endHour,
       eventTime,
@@ -182,12 +180,12 @@ class CreateEventPage extends Component {
             <DatePicker
               onChange={this.handleStartDateChange}
               floatingLabelText="Start Date"
-              defaultDate={Date(this.state.startDate)}
+              defaultDate={this.state.startDate}
             />
             <DatePicker
               onChange={this.handleEndDateChange}
               floatingLabelText="End Date"
-              defaultDate={Date(this.state.endDate)}
+              defaultDate={this.state.endDate}
             />
           </div>
           <div className="form-group">
@@ -231,8 +229,8 @@ class CreateEventPage extends Component {
           </div>
         </form>
         <EventTimeBlock
-          startDate={this.state.startDate}
-          endDate={this.state.endDate}
+          startDate={this.yyyymmdd(this.state.startDate)}
+          endDate={this.yyyymmdd(this.state.endDate)}
           startHour={this.state.startHour}
           endHour={this.state.endHour}
           daysSelected={this.state.daysSelected}
