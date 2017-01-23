@@ -183,44 +183,42 @@ class CreateEventPage extends Component {
   render() {
     return (
       <div className="container col-md-12">
-        <form>
-          <div>
-            <TextField
-              onChange={this.handleEventNameChange}
-              onBlur={this.handleEmptyEventName}
-              id="eventName"
-              hintText="Enter Event Name"
-              floatingLabelText="Event Name"
-              errorText={this.state.errorText}
-              value={this.state.eventName}
-            />
-          </div>
-          <div style={optionsStyle}>
-            <DatePicker
-              onChange={this.handleStartDateChange}
-              floatingLabelText="Start Date"
-              defaultDate={this.state.startDate}
-            />
-            <DatePicker
-              onChange={this.handleEndDateChange}
-              floatingLabelText="End Date"
-              defaultDate={this.state.endDate}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="day">Select Days</label>
-            {this.props.days.map((day, idx) => (
-              <div className="form-check" key={idx}>
-                <Checkbox
-                  id={idx}
-                  label={day}
-                  checked={this.state.daysSelected[idx]}
-                  onCheck={this.handleDayChange}
-                />
-              </div>)
-            )}
-          </div>
-        </form>
+        <div>
+          <TextField
+            onChange={this.handleEventNameChange}
+            onBlur={this.handleEmptyEventName}
+            id="eventName"
+            hintText="Enter Event Name"
+            floatingLabelText="Event Name"
+            errorText={this.state.errorText}
+            value={this.state.eventName}
+          />
+        </div>
+        <div style={optionsStyle}>
+          <DatePicker
+            onChange={this.handleStartDateChange}
+            floatingLabelText="Start Date"
+            defaultDate={this.state.startDate}
+          />
+          <DatePicker
+            onChange={this.handleEndDateChange}
+            floatingLabelText="End Date"
+            defaultDate={this.state.endDate}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="day">Select Days</label>
+          {this.props.days.map((day, idx) => (
+            <div className="form-check" key={idx}>
+              <Checkbox
+                id={idx}
+                label={day}
+                checked={this.state.daysSelected[idx]}
+                onCheck={this.handleDayChange}
+              />
+            </div>)
+          )}
+        </div>
         <EventTimeBlock
           startDate={this.yyyymmdd(this.state.startDate)}
           endDate={this.yyyymmdd(this.state.endDate)}

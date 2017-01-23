@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class JumpPage extends Component {
   constructor() {
@@ -28,7 +29,11 @@ class JumpPage extends Component {
         <div className="row">
           <h2>Send this link to your invitees...</h2>
           <div className="col-md-12 text-center">
-            <a href={`/form/${this.state.eventUrl}`}>link</a>
+            <RaisedButton
+              href={`/form/${this.state.eventUrl}`}
+              label="link"
+              primary
+            />
           </div>
         </div>
       </div>

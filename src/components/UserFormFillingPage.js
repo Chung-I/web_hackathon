@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import EventTimeBlock from './EventTimeBlock';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 class UserFormFillingPage extends Component {
 
@@ -34,13 +36,16 @@ class UserFormFillingPage extends Component {
       startHour: json.startHour,
       endHour: json.endHour,
       blockEnabled: json.eventTime,
-      blockChecked: {}
+      blockChecked: {},
+      errorText: ''
     });
   }
 
-  handleUserNameChange = event => {
-    this.setState({ userName: event.target.value });
+
+  handleUserNameChange = (event, newValue) => {
+    this.setState({ userName: newValue });
   }
+
 
   handleBlockChange = event => {
     const newBlockChecked = this.state.blockChecked;
@@ -48,11 +53,22 @@ class UserFormFillingPage extends Component {
     this.setState({ blockChecked: newBlockChecked });
   }
 
+  handleEmptyUserName = event => {
+    const errorText = event.target.value === '' ? 'Required' : '';
+    this.setState({ errorText });
+  }
+
   handleSubmit = async e => {
+    if (this.state.userName === '') {
+      this.setState({ errorText: 'Required' });
+      return;
+    }
+
     const data = {
       userName: this.state.userName,
       availableTime: this.state.blockChecked
     };
+
     e.preventDefault();
     const myHeaders = new Headers();
     console.log(data);
@@ -77,29 +93,36 @@ class UserFormFillingPage extends Component {
   render() {
     return (
       <div className="container col-md-12">
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="userName">UserName</label>
-            <input
-              type="text"
-              className="form-control"
-              value={this.state.userName}
-              onChange={this.handleUserNameChange}
-            />
-          </div>
-          <EventTimeBlock
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            startHour={this.state.startHour}
-            endHour={this.state.endHour}
-            eventTime={this.state.eventTime}
-            daysSelected={this.state.daysSelected}
-            blockChecked={this.state.blockChecked}
-            blockEnabled={this.state.blockEnabled}
-            handleBlockChange={this.handleBlockChange}
+        <div>
+          <TextField
+            onChange={this.handleUserNameChange}
+            onBlur={this.handleEmptyUserName}
+            id="userName"
+            hintText="Enter User Name"
+            floatingLabelText="User Name"
+            errorText={this.state.errorText}
+            value={this.state.userName}
           />
-          <button type="submit" className="btn btn-primary">Submit</button>
-        </form>
+        </div>
+        <EventTimeBlock
+          startDate={this.state.startDate}
+          endDate={this.state.endDate}
+          startHour={this.state.startHour}
+          endHour={this.state.endHour}
+          eventTime={this.state.eventTime}
+          daysSelected={this.state.daysSelected}
+          blockChecked={this.state.blockChecked}
+          blockEnabled={this.state.blockEnabled}
+          handleBlockChange={this.handleBlockChange}
+        />
+        <div className="row">
+          <RaisedButton
+            label="Submit"
+            primary
+            disabled={this.state.errorText === 'Required'}
+            onClick={this.handleSubmit}
+          />
+        </div>
       </div>
     );
   }

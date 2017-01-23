@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class UserJumpPage extends Component {
   constructor() {
@@ -28,7 +29,11 @@ class UserJumpPage extends Component {
         <div className="row">
           <h2>Update your response any time here:</h2>
           <div className="col-md-12 text-center">
-            <a href={`/form/${this.state.eventUrl}/update/${this.state.userUrl}`}>link</a>
+            <RaisedButton
+              href={`/form/${this.state.eventUrl}/update/${this.state.userUrl}`}
+              label="link"
+              primary
+            />
           </div>
         </div>
       </div>
