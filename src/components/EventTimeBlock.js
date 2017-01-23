@@ -1,7 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import 'babel-polyfill';
-import fetch from 'isomorphic-fetch';
 import '../css/EventTimeBlock.css';
+import Checkbox from 'material-ui/Checkbox';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import { Table, TableBody, TableHeader, TableHeaderColumn,
+  TableRow, TableRowColumn } from 'material-ui/Table';
 
 class EventTimeBlock extends Component {
   static propTypes = {
@@ -12,20 +17,15 @@ class EventTimeBlock extends Component {
     handleBlockChange: PropTypes.func,
     blockEnabled: PropTypes.object,
     blockChecked: PropTypes.object,
-    daysSelected: PropTypes.array
+    daysSelected: PropTypes.array,
+    checkable: PropTypes.bool,
+    open: PropTypes.bool,
+    handleOpen: PropTypes.func,
+    handleClose: PropTypes.func,
+    handleMouseOver: PropTypes.func,
+    handleMouseLeave: PropTypes.func,
+    userData: PropTypes.array
   };
-
-  handleMouseDown = e => {
-    console.log(`mouse down: ${e.target}`);
-  }
-
-  handleMouseUp = e => {
-    console.log(`mouse up: ${e.target}`);
-  }
-
-  handleMouseOver = e => {
-    console.log(`mouse over: ${e.target}`);
-  }
 
   getAllDays = (startDate, endDate) => {
     const s = new Date(startDate);
@@ -71,29 +71,97 @@ class EventTimeBlock extends Component {
     const dateRange = this.getAllDays(this.props.startDate, this.props.endDate);
     const hourRange = this.getAllHours(this.props.startHour, this.props.endHour);
 
+
+
+    const count2color = (count, total) => {
+      const colorPcg = count / total;
+      let labelColor = '#ffffff';
+      const redPcg = Math.round(255 * (((1 - colorPcg) * 10) / 10));
+
+      if (redPcg > 128) labelColor = '#000000';
+
+      let redResult = redPcg.toString(16);
+
+      if (redResult === '0') {
+        redResult = '00';
+      }
+
+      const bgColor = `#${redResult}${redResult}${redResult}`;
+      return { bgColor, labelColor };
+    };
+
+
+    const element = timeBlock => {
+      const userTimeTable = (timeBlock, userData) => (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+              <TableHeaderColumn>Status</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            {userData.map(user => {
+              const status = user.availableTime[timeBlock];
+              return (
+                <TableRow key={user.userUrl}>
+                  <TableRowColumn>{user.userName}</TableRowColumn>
+                  <TableRowColumn>{(status === true ? 'available' : 'not available')}</TableRowColumn>
+                </TableRow>);
+            }
+            )}
+          </TableBody>
+        </Table>
+      );
+      const actions = [
+        <FlatButton
+          label="Ok"
+          primary
+          keyboardFocused
+          onTouchTap={this.props.handleClose}
+        />,
+      ];
+      const count = this.props.userData.filter(user => (
+        user.availableTime[timeBlock])).length;
+      return (this.props.checkable ?
+      (<Checkbox
+        id={timeBlock}
+        label={timeBlock}
+        type="checkbox"
+        checked={this.props.blockChecked[timeBlock] || false}
+        onCheck={e => this.props.handleBlockChange(e)}
+      />) :
+      (<div>
+        <RaisedButton
+          label={timeBlock}
+          onTouchTap={() => this.props.handleOpen()}
+          labelColor={count2color(count, this.props.userData.length).labelColor}
+          backgroundColor={count2color(count, this.props.userData.length).bgColor}          
+        />
+      </div>));
+    };
+
     return (
       <table className="time-table">
         <tbody>{
           hourRange.map(hour => (
-            <tr className="spaceUnder">{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
+            <tr
+              key={hour}
+              className="spaceUnder"
+            >{dateRange.filter(date => (this.props.daysSelected[date.getDay()]))
               .map(date => {
                 const timeBlock = `${this.yyyymmdd(date)}-${this.hh(hour)}`;
                 const hourable = this.props.blockEnabled[timeBlock];
                 return (hourable ?
                   (<td
-                    onMouseDown={this.handleMouseDown}
-                    onMouseOver={this.handleMouseOver}
-                    onMouseUp={this.handleMouseUp}
+                    key={date}
+                    onMouseOver={() => this.props.handleMouseOver(timeBlock)}
+                    onMouseLeave={() => this.props.handleMouseLeave()}
                     className="slot no-line-break space-at-right"
-                  >
-                    <input
-                      id={timeBlock}
-                      type="checkbox"
-                      checked={this.props.blockChecked[timeBlock] || false}
-                      onChange={e => this.props.handleBlockChange(e)}
-                    />{timeBlock}
+                  >{element(timeBlock)}
                   </td>) : (
                     <td
+                      key={date}
                       className="slot no-line-break space-at-right"
                     >&nbsp;
                     </td>)
@@ -108,7 +176,14 @@ class EventTimeBlock extends Component {
 
 EventTimeBlock.defaultProps = {
   days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
-    'Friday', 'Saturday', 'Sunday']
+    'Friday', 'Saturday', 'Sunday'],
+  daysSelected: [1, 2, 3, 4, 5, 6, 7],
+  open: false,
+  handleOpen: () => {},
+  handleClose: () => {},
+  userData: [],
+  handleMouseOver: () => {},
+  handleMouseLeave: () => {}
 };
 
 export default EventTimeBlock;

@@ -2,6 +2,17 @@ import React, { Component, PropTypes } from 'react';
 import 'babel-polyfill';
 import EventTimeBlock from './EventTimeBlock';
 import fetch from 'isomorphic-fetch';
+import DatePicker from 'material-ui/DatePicker';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import Checkbox from 'material-ui/Checkbox';
+import clone from '../utils/utils';
+
+const optionsStyle = {
+  maxWidth: 255,
+  marginRight: 'auto',
+};
+
 
 class CreateEventPage extends Component {
   static propTypes = {
@@ -14,11 +25,8 @@ class CreateEventPage extends Component {
     props.days.forEach((day, idx) => {
       defaultDaysSelected[idx] = true;
     });
-    const today = new Date();
-    const sevenDaysLater = new Date();
-    sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
-    const startDate = this.yyyymmdd(today);
-    const endDate = this.yyyymmdd(sevenDaysLater);
+    const startDate = new Date();
+    let endDate = new Date();
     const startHour = 8;
     const endHour = 21;
 
@@ -29,26 +37,31 @@ class CreateEventPage extends Component {
       endDate,
       startHour,
       endHour,
+      errorText: '',
       blockChecked: {}
     };
   }
 
   getAllDays = (startDate, endDate) => {
-    const s = new Date(startDate);
+    const s = clone(startDate);
   // Temp variable for updating a[]
-    let nS = new Date(startDate);
-    const e = new Date(endDate);
+    let nS = clone(startDate);
+    const e = clone(endDate);
     const a = [];
 
+    a.push(nS);
+
     while (s <= e) {
-      a.push(nS);
+      console.log(nS);
       nS = new Date(s.setDate(
         s.getDate() + 1
       ));
+      a.push(nS);
     }
 
     return a;
   };
+
 
   getAllHours = (startHour, endHour) => {
     let sh = +startHour;
@@ -61,17 +74,6 @@ class CreateEventPage extends Component {
     return a;
   };
 
-  yyyymmdd = date => {
-    const mm = date.getMonth() + 1; // getMonth() is zero-based
-    const dd = date.getDate();
-
-    return [date.getFullYear(),
-      (mm > 9 ? '' : '0') + mm,
-      (dd > 9 ? '' : '0') + dd,
-    ].join('-');
-  };
-
-  hh = hour => ((hour > 9 ? '' : '0') + hour);
 
   getBlockEnabled = () => {
     const blockEnabled = {};
@@ -87,6 +89,10 @@ class CreateEventPage extends Component {
     return blockEnabled;
   }
 
+
+  hh = hour => ((hour > 9 ? '' : '0') + hour);
+
+
   yyyymmdd = date => {
     const mm = date.getMonth() + 1; // getMonth() is zero-based
     const dd = date.getDate();
@@ -97,18 +103,9 @@ class CreateEventPage extends Component {
     ].join('-');
   };
 
-  yyyymmdd = date => {
-    const mm = date.getMonth() + 1; // getMonth() is zero-based
-    const dd = date.getDate();
 
-    return [date.getFullYear(),
-      (mm > 9 ? '' : '0') + mm,
-      (dd > 9 ? '' : '0') + dd,
-    ].join('-');
-  };
-
-  handleEventNameChange = event => {
-    this.setState({ eventName: event.target.value });
+  handleEventNameChange = (event, newValue) => {
+    this.setState({ eventName: newValue });
   }
 
 
@@ -119,12 +116,12 @@ class CreateEventPage extends Component {
     this.setState({ daysSelected: newDaysSelected });
   }
 
-  handleStartDateChange = event => {
-    this.setState({ startDate: event.target.value });
+  handleStartDateChange = (event, date) => {
+    this.setState({ startDate: date });
   }
 
-  handleEndDateChange = event => {
-    this.setState({ endDate: event.target.value });
+  handleEndDateChange = (event, date) => {
+    this.setState({ endDate: date });
   }
 
   handleBlockChange = event => {
@@ -133,17 +130,30 @@ class CreateEventPage extends Component {
     this.setState({ blockChecked: newBlockChecked });
   }
 
+  handleEmptyEventName = event => {
+    const errorText = event.target.value === '' ? 'Required' : '';
+    this.setState({ errorText });
+  }
+
   handleSubmit = async () => {
     const blockEnabled = this.getBlockEnabled();
     const eventTime = {};
+    let empty = true;
     Object.getOwnPropertyNames(blockEnabled).forEach(key => {
       const available = this.state.blockChecked[key];
-      if (available) eventTime[key] = this.state.blockChecked[key];
+      if (available) {
+        eventTime[key] = this.state.blockChecked[key];
+        empty = false;
+      }
     });
+    if (this.state.eventName === '') {
+      this.setState({ errorText: 'Required' });
+      return;
+    }
     const data = {
       eventName: this.state.eventName,
-      startDate: this.state.startDate,
-      endDate: this.state.endDate,
+      startDate: this.yyyymmdd(this.state.startDate),
+      endDate: this.yyyymmdd(this.state.endDate),
       startHour: this.state.startHour,
       endHour: this.state.endHour,
       eventTime,
@@ -167,75 +177,67 @@ class CreateEventPage extends Component {
 
     const eventUrl = json.eventUrl;
     const adminUrl = json.adminUrl;
-    console.log(`adminUrl: ${adminUrl}`);
     window.location.href = `form/${eventUrl}/links/${adminUrl}`;
   }
-
 
   render() {
     return (
       <div className="container col-md-12">
-        <form>
-          <div className="form-group" onChange={this.handleEventNameChange}>
-            <label htmlFor="UserName">User Name</label>
-            <input
-              type="text"
-              className="form-control"
-              id="eventName"
-              placeholder="Enter Event Name"
-              value={this.state.eventName}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="startDate">Start Date</label>
-            <input
-              type="date"
-              className="form-control"
-              value={this.state.startDate}
-              onChange={this.handleStartDateChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="endDate">End Date</label>
-            <input
-              type="date"
-              className="form-control"
-              value={this.state.endDate}
-              onChange={this.handleEndDateChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="day">Select Days</label>
-            {this.props.days.map((day, idx) => (
-              <div className="form-check" key={idx}>
-                <label className="form-check-label">
-                  <input
-                    id={idx}
-                    checked={this.state.daysSelected[idx]}
-                    onChange={this.handleDayChange}
-                    type="checkbox"
-                  />{day}
-                </label>
-              </div>)
-            )}
-          </div>
-          <div className="row">
-            <a
-              className="btn btn-primary"
-              onClick={this.handleSubmit}
-            >Submit</a>
-          </div>
-        </form>
+        <div>
+          <TextField
+            onChange={this.handleEventNameChange}
+            onBlur={this.handleEmptyEventName}
+            id="eventName"
+            hintText="Enter Event Name"
+            floatingLabelText="Event Name"
+            errorText={this.state.errorText}
+            value={this.state.eventName}
+          />
+        </div>
+        <div style={optionsStyle}>
+          <DatePicker
+            onChange={this.handleStartDateChange}
+            floatingLabelText="Start Date"
+            defaultDate={this.state.startDate}
+          />
+          <DatePicker
+            onChange={this.handleEndDateChange}
+            floatingLabelText="End Date"
+            defaultDate={this.state.endDate}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="day">Select Days</label>
+          {this.props.days.map((day, idx) => (
+            <div className="form-check" key={idx}>
+              <Checkbox
+                id={idx}
+                label={day}
+                checked={this.state.daysSelected[idx]}
+                onCheck={this.handleDayChange}
+              />
+            </div>)
+          )}
+        </div>
         <EventTimeBlock
-          startDate={this.state.startDate}
-          endDate={this.state.endDate}
+          startDate={this.yyyymmdd(this.state.startDate)}
+          endDate={this.yyyymmdd(this.state.endDate)}
           startHour={this.state.startHour}
           endHour={this.state.endHour}
           daysSelected={this.state.daysSelected}
           blockChecked={this.state.blockChecked}
           blockEnabled={this.getBlockEnabled()}
           handleBlockChange={this.handleBlockChange}
+          checkable
         />
+        <div className="row">
+          <RaisedButton
+            label="Submit"
+            primary
+            onClick={this.handleSubmit}
+          />
+        </div>
+        <br />
       </div>
     );
   }

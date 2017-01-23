@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'babel-polyfill';
 import EventTimeBlock from './EventTimeBlock';
+import FlatButton from 'material-ui/FlatButton';
 // import fetch from 'isomorphic-fetch';
 import rd3 from 'rd3';
 
@@ -16,16 +17,25 @@ class PollResultPage extends Component {
       count: 0, // count = (userdata.available = true) . length
       total: 10, // total = usedata.length
       bgColor: 'white',
+      open: false,
+      mouseTimeBlock: '',
+      userData: []
     };
   }
 
   // Need to fix to fit db schema
   componentDidMount() {
-    fetch('/api/result')
+    fetch(`/api/form/${this.props.params.eventUrl}`)
       .then(res => res.json())
       .then(json => {
         this.setState({
-          pollreuslt: json,
+          eventUrl: json.eventUrl,
+          startDate: json.startDate,
+          endDate: json.endDate,
+          startHour: parseInt(json.startHour, 10),
+          endHour: parseInt(json.endHour, 10),
+          blockEnabled: json.eventTime,
+          userData: json.userData
         });
       });
   }
@@ -35,6 +45,44 @@ class PollResultPage extends Component {
       count: e.target.value,
     });
   }
+
+  handleOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleBlockMouseOver = timeBlock => {
+    this.setState({ mouseTimeBlock: timeBlock });
+  };
+
+  handleBlockMouseLeave = () => {
+    console.log("blockMouseLeave");
+    this.setState({ mouseTimeBlock: '' });
+  };
+
+  count2color = (count, total) => {
+    const colorPcg = count / total;
+
+    const redPcg = Math.round(255 * (((1 - colorPcg) * 10) / 10));
+    const greenPcg = Math.round(255 * ((colorPcg * 10) / 10));
+
+    let redResult = redPcg.toString(16);
+    let greenResult = greenPcg.toString(16);
+
+    if (redResult === '0') {
+      redResult = '00';
+    }
+    if (greenResult === '0') {
+      greenResult = '00';
+    }
+
+    const colorResult = `#${redResult}${greenResult}00`;
+    return colorResult;
+  };
+
 
   render() {
 // Color change section
@@ -78,34 +126,40 @@ class PollResultPage extends Component {
     ];
 
     return (
-      <div className="pollResult">
-        <h1>The result - without data flow</h1>
-        <input type="text" value={this.state.count} onChange={this.handleCountChange} />
-
+      <div className="pollResult container">
+        <h1>Results</h1>
+        <div className="row">
+          <div className="col col-md-2">
+            {this.state.userData.map(user => {
+              let available = !user.availableTime[this.state.mouseTimeBlock];
+              if (this.state.mouseTimeBlock === '') {
+                available = true;
+              }
+              return (
+                <FlatButton
+                  label={user.userName}
+                  disabled={available}
+                />);
+            })}
+          </div>
+          <div className="col col-md-10">
+            <EventTimeBlock
+              startDate={this.state.startDate}
+              endDate={this.state.endDate}
+              startHour={this.state.startHour}
+              endHour={this.state.endHour}
+              blockEnabled={this.state.blockEnabled}
+              handleBlockChange={this.handleBlockChange}
+              open={this.state.open}
+              handleOpen={this.handleOpen}
+              handleClose={this.handleClose}
+              handleMouseOver={this.handleBlockMouseOver}
+              handleMouseLeave={this.handleBlockMouseLeave}
+              userData={this.state.userData}
+            />
+          </div>
+        </div>
         <hr />
-
-        <button style={btnstyle}>{this.state.count}</button>
-        <button style={btnstyle}>{this.state.count}</button>
-        <button style={btnstyle}>{this.state.count}</button>
-        <button style={btnstyle}>{this.state.count}</button>
-
-        <hr />
-        <EventTimeBlock
-          startDate="2017-01-03-08"
-          endDate="2017-01-10-08"
-          startHour={8}
-          endHour={21}
-        />
-        <hr />
-        <PollChart
-          data={chartData}
-          width={450}
-          height={400}
-          radius={110}
-          innerRadius={20}
-          sectorBorderColor="white"
-          title="Result Chart"
-        />
       </div>
     );
   }

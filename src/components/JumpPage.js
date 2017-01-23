@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class JumpPage extends Component {
   constructor() {
@@ -18,17 +19,35 @@ class JumpPage extends Component {
   }
 
   render() {
+    const style = {
+      textAlign: 'center',
+      paddingTop: 100
+    };
     return (
-      <div className="container">
+      <div style={style}>
         <div className="row">
           <div className="col-md-12 text-center">
             <h1>歡迎來到easyScheduling!</h1>
           </div>
         </div>
         <div className="row">
-          <h2>Send this link to your invitees...</h2>
+          <h2>Send this link to your invitees:</h2>
           <div className="col-md-12 text-center">
-            <a href={`/form/${this.state.eventUrl}`}>link</a>
+            <RaisedButton
+              href={`/form/${this.state.eventUrl}`}
+              label="link"
+              primary
+            />
+          </div>
+        </div>
+        <div className="row">
+          <h2>View your event results here:</h2>
+          <div className="col-md-12 text-center">
+            <RaisedButton
+              href={`/result/${this.state.eventUrl}`}
+              label="link"
+              primary
+            />
           </div>
         </div>
       </div>
