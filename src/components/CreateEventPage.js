@@ -228,6 +228,7 @@ class CreateEventPage extends Component {
           blockChecked={this.state.blockChecked}
           blockEnabled={this.getBlockEnabled()}
           handleBlockChange={this.handleBlockChange}
+          checkable
         />
         <div className="row">
           <RaisedButton

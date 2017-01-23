@@ -3,6 +3,12 @@ import 'babel-polyfill';
 import fetch from 'isomorphic-fetch';
 import '../css/EventTimeBlock.css';
 import Checkbox from 'material-ui/Checkbox';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import DatePicker from 'material-ui/DatePicker';
+import FlatButton from 'material-ui/FlatButton';
+import { Table, TableBody, TableHeader, TableHeaderColumn,
+  TableRow, TableRowColumn } from 'material-ui/Table';
 
 class EventTimeBlock extends Component {
   static propTypes = {
@@ -13,7 +19,11 @@ class EventTimeBlock extends Component {
     handleBlockChange: PropTypes.func,
     blockEnabled: PropTypes.object,
     blockChecked: PropTypes.object,
-    daysSelected: PropTypes.array
+    daysSelected: PropTypes.array,
+    checkable: PropTypes.bool,
+    open: PropTypes.bool,
+    handleOpen: PropTypes.func,
+    handleClose: PropTypes.func,
   };
 
   handleMouseDown = e => {
@@ -72,6 +82,74 @@ class EventTimeBlock extends Component {
     const dateRange = this.getAllDays(this.props.startDate, this.props.endDate);
     const hourRange = this.getAllHours(this.props.startHour, this.props.endHour);
 
+    const TableExampleSimple = () => (
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHeaderColumn>ID</TableHeaderColumn>
+            <TableHeaderColumn>Name</TableHeaderColumn>
+            <TableHeaderColumn>Status</TableHeaderColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableRowColumn>1</TableRowColumn>
+            <TableRowColumn>John Smith</TableRowColumn>
+            <TableRowColumn>Employed</TableRowColumn>
+          </TableRow>
+          <TableRow>
+            <TableRowColumn>2</TableRowColumn>
+            <TableRowColumn>Randal White</TableRowColumn>
+            <TableRowColumn>Unemployed</TableRowColumn>
+          </TableRow>
+          <TableRow>
+            <TableRowColumn>3</TableRowColumn>
+            <TableRowColumn>Stephanie Sanders</TableRowColumn>
+            <TableRowColumn>Employed</TableRowColumn>
+          </TableRow>
+          <TableRow>
+            <TableRowColumn>4</TableRowColumn>
+            <TableRowColumn>Steve Brown</TableRowColumn>
+            <TableRowColumn>Employed</TableRowColumn>
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+
+    const actions = [
+      <FlatButton
+        label="Ok"
+        primary
+        keyboardFocused
+        onTouchTap={this.props.handleClose}
+      />,
+    ];
+
+    const element = timeBlock => (this.props.checkable ?
+      (<Checkbox
+        id={timeBlock}
+        label={timeBlock}
+        type="checkbox"
+        checked={this.props.blockChecked[timeBlock] || false}
+        onCheck={e => this.props.handleBlockChange(e)}
+      />) :
+      (<div>
+        <RaisedButton
+          label={timeBlock}
+          onTouchTap={() => this.props.handleOpen()}
+        />
+        <Dialog
+          title={`poll result for time block: ${timeBlock}`}
+          actions={actions}
+          modal={false}
+          open={this.props.open}
+          onRequestClose={() => this.props.handleClose()}
+        >
+          Open a Date Picker dialog from within a dialog.
+          <DatePicker hintText="Date Picker" />
+        </Dialog>
+      </div>));
+
     return (
       <table className="time-table">
         <tbody>{
@@ -86,14 +164,7 @@ class EventTimeBlock extends Component {
                     onMouseOver={this.handleMouseOver}
                     onMouseUp={this.handleMouseUp}
                     className="slot no-line-break space-at-right"
-                  >
-                    <Checkbox
-                      id={timeBlock}
-                      label={timeBlock}
-                      type="checkbox"
-                      checked={this.props.blockChecked[timeBlock] || false}
-                      onCheck={e => this.props.handleBlockChange(e)}
-                    />
+                  >{element(timeBlock)}
                   </td>) : (
                     <td
                       className="slot no-line-break space-at-right"
@@ -110,7 +181,11 @@ class EventTimeBlock extends Component {
 
 EventTimeBlock.defaultProps = {
   days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
-    'Friday', 'Saturday', 'Sunday']
+    'Friday', 'Saturday', 'Sunday'],
+  daysSelected: [1, 2, 3, 4, 5, 6, 7],
+  open: false,
+  handleOpen: () => {},
+  handleClose: () => {}
 };
 
 export default EventTimeBlock;

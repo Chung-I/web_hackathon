@@ -13,14 +13,13 @@ class UserFormFillingPage extends Component {
       endDate: '',
       startHour: '',
       endHour: '',
-      daysSelected: [1, 2, 3, 4, 5, 6, 7],
       blockEnabled: {},
       blockChecked: {},
       userName: ''
     };
   }
 
-  componentWillMount = async () => {
+  componentDidMount = async () => {
     let res;
     let json;
     try {
@@ -93,36 +92,31 @@ class UserFormFillingPage extends Component {
   render() {
     return (
       <div className="container col-md-12">
-        <div>
-          <TextField
-            onChange={this.handleUserNameChange}
-            onBlur={this.handleEmptyUserName}
-            id="userName"
-            hintText="Enter User Name"
-            floatingLabelText="User Name"
-            errorText={this.state.errorText}
-            value={this.state.userName}
-          />
-        </div>
+        <TextField
+          onChange={this.handleUserNameChange}
+          onBlur={this.handleEmptyUserName}
+          id="userName"
+          hintText="Enter User Name"
+          floatingLabelText="User Name"
+          errorText={this.state.errorText}
+          value={this.state.userName}
+        />
         <EventTimeBlock
           startDate={this.state.startDate}
           endDate={this.state.endDate}
           startHour={this.state.startHour}
           endHour={this.state.endHour}
-          eventTime={this.state.eventTime}
-          daysSelected={this.state.daysSelected}
           blockChecked={this.state.blockChecked}
           blockEnabled={this.state.blockEnabled}
           handleBlockChange={this.handleBlockChange}
+          checkable
         />
-        <div className="row">
-          <RaisedButton
-            label="Submit"
-            primary
-            disabled={this.state.errorText === 'Required'}
-            onClick={this.handleSubmit}
-          />
-        </div>
+        <RaisedButton
+          label="Submit"
+          primary
+          disabled={this.state.errorText === 'Required'}
+          onClick={this.handleSubmit}
+        />
       </div>
     );
   }

@@ -49,7 +49,7 @@ const App = () => (
         <Route path="/form/:eventUrl/links/:adminUrl" component={JumpPage} onEnter={validateUrl} />
         <Route path="/form/:eventUrl/thanks/:userUrl" component={UserJumpPage} onEnter={validateUrl} />
         <Route path="/form/:eventUrl/update/:userUrl" component={UserUpdateFormPage} onEnter={validateUrl} />
-        <Route path="/result" component={PollResultPage} />
+        <Route path="/result/:eventUrl" component={PollResultPage} />
       </Router>
     </div>
   </MuiThemeProvider>

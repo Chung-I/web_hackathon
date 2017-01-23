@@ -16,16 +16,22 @@ class PollResultPage extends Component {
       count: 0, // count = (userdata.available = true) . length
       total: 10, // total = usedata.length
       bgColor: 'white',
+      open: false
     };
   }
 
   // Need to fix to fit db schema
   componentDidMount() {
-    fetch('/api/result')
+    fetch(`/api/form/${this.props.params.eventUrl}`)
       .then(res => res.json())
       .then(json => {
         this.setState({
-          pollreuslt: json,
+          eventUrl: json.eventUrl,
+          startDate: json.startDate,
+          endDate: json.endDate,
+          startHour: parseInt(json.startHour, 10),
+          endHour: parseInt(json.endHour, 10),
+          blockEnabled: json.eventTime
         });
       });
   }
@@ -35,6 +41,14 @@ class PollResultPage extends Component {
       count: e.target.value,
     });
   }
+
+  handleOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
   render() {
 // Color change section
@@ -91,10 +105,15 @@ class PollResultPage extends Component {
 
         <hr />
         <EventTimeBlock
-          startDate="2017-01-03-08"
-          endDate="2017-01-10-08"
-          startHour={8}
-          endHour={21}
+          startDate={this.state.startDate}
+          endDate={this.state.endDate}
+          startHour={this.state.startHour}
+          endHour={this.state.endHour}
+          blockEnabled={this.state.blockEnabled}
+          handleBlockChange={this.handleBlockChange}
+          open={this.state.open}
+          handleOpen={this.handleOpen}
+          handleClose={this.handleClose}
         />
         <hr />
         <PollChart

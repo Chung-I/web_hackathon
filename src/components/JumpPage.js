@@ -31,10 +31,20 @@ class JumpPage extends Component {
           </div>
         </div>
         <div className="row">
-          <h2>Send this link to your invitees...</h2>
+          <h2>Send this link to your invitees:</h2>
           <div className="col-md-12 text-center">
             <RaisedButton
               href={`/form/${this.state.eventUrl}`}
+              label="link"
+              primary
+            />
+          </div>
+        </div>
+        <div className="row">
+          <h2>View your event results here:</h2>
+          <div className="col-md-12 text-center">
+            <RaisedButton
+              href={`/result/${this.state.eventUrl}`}
               label="link"
               primary
             />
